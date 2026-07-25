@@ -18,7 +18,19 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 
 ## 状态
 
-仓库刚建立，规格与开发方案见文档。实现按里程碑推进（见开发计划）。
+**M0 已落地**：CMake 链 QTE、`ThemeBridge` + 可换肤 `RibbonBar` / `RibbonWindow`、`qfr_gallery` 可切 light/dark/hc。  
+下一阶段 **M1**（Tab / Group / QAction）见 [开发方案](docs/zh/dev-plan.md)。
+
+## 快速开始（Windows）
+
+```bat
+:: vcvars x64，设置 QTDIR；默认使用同级 ../QThemeEngine
+cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=%QTDIR%
+cmake --build build
+build\qfr_gallery.exe
+```
+
+细节：[docs/zh/build.md](docs/zh/build.md)。
 
 ## 文档
 
@@ -26,25 +38,24 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 |------|------|---------|
 | 架构（权威） | [architecture.md](docs/zh/architecture.md) | [architecture.md](docs/en/architecture.md) |
 | 开发方案 / 计划 | [dev-plan.md](docs/zh/dev-plan.md) | [dev-plan.md](docs/en/dev-plan.md) |
+| 构建 | [build.md](docs/zh/build.md) | [build.md](docs/en/build.md) |
 
 日常以中文文档为准。
 
-## 要求（规划）
+## 要求
 
 | 项 | 说明 |
 |----|------|
 | Qt | 6.8+ Widgets |
-| QTE | 同机构建或 `find_package(QThemeEngine)`（具体接入方式见架构文档） |
-| 工具链 | CMake、Ninja；Windows 上优先 MSVC x64 |
+| QTE | 默认 `../QThemeEngine`，或 `-DQFR_QTE_SOURCE_DIR=` / `find_package` |
+| 工具链 | CMake 3.21+、Ninja；Windows 上 MSVC x64 |
 
-## 仓库布局（规划）
+## 仓库布局
 
 ```text
-include/qfluentribbon/   公共 API
+include/qfluentribbon/   公共 API（ThemeBridge / RibbonBar / RibbonWindow）
 src/                     实现
-examples/gallery/        Showcase（对标 Fluent.Ribbon Showcase 行为）
-tests/                   规则 / 布局单测（优先无 GUI）
-cmake/                   包配置
+examples/gallery/        M0 Showcase（换肤）
 docs/zh|en/              中英文文档
 ```
 

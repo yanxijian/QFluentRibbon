@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-25（建仓：目标、分层、MVP、分期）
+> **更新**：2026-07-25（M0 工程骨架落地：CMake↔QTE、ThemeBridge、RibbonBar 占位）
 
 ---
 
@@ -14,10 +14,19 @@
 
 | 结论 | 说明 |
 |------|------|
-| **仓已建、代码未起** | 先冻结架构与里程碑，再落 M0 工程骨架 |
+| **M0 已完成** | CMake 链 QTE；`ThemeBridge` 播种 `ribbon.*`；`RibbonBar`/`RibbonWindow` 占位；`qfr_gallery` 可切肤 |
 | **双依赖、单皮肤源** | 功能依赖 Qt Widgets + QTE；视觉 SSOT 只认 ThemeStore |
 | **参考而非端口** | Fluent.Ribbon 提供信息架构与行为清单；API 按 Qt/`QAction` 习惯设计 |
-| **MVP 优先** | 先跑通「条 + 页 + 组 + 换肤 + 基础缩略」，再 QAT / Backstage / KeyTip |
+| **下一刀：M1** | Tab / Group / QAction + 基础缩略 |
+
+### M0 出站核对
+
+| 项 | 状态 |
+|----|------|
+| CMake `../QThemeEngine` / `QFR_QTE_SOURCE_DIR` / `find_package` | 已接 |
+| `Engine::apply` + light/dark/hc 切换条带变色 | Gallery 验收 |
+| `ribbon.*` 草案（Bridge 播种，键名见 ThemeBridge） | 已文档化于构建说明 / 架构 |
+| 无 Ribbon 私有 QSS | 遵守 |
 
 ## 3. 原则（红线）
 

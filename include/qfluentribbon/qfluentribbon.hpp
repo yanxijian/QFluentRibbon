@@ -1,7 +1,8 @@
 #ifndef __QFR_QFLUENTRIBBON_H__
 #define __QFR_QFLUENTRIBBON_H__
 
-// Public umbrella header — types land with M0/M1 (see docs/zh/dev-plan.md).
-// Namespace: qfluentribbon
+#include "qfluentribbon/ribbon_bar.hpp"
+#include "qfluentribbon/ribbon_window.hpp"
+#include "qfluentribbon/theme_bridge.hpp"
 
 #endif // __QFR_QFLUENTRIBBON_H__

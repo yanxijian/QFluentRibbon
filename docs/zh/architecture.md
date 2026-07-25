@@ -74,20 +74,25 @@
 - 壳层与专用自绘：**只**通过 ThemeStore / `qtheme::api` 取色与度量。
 - **禁止**对 Ribbon 壳 `setStyleSheet` 作为主题通道。
 
-### 5.2 拟扩展的度量 / 色组（草案）
+### 5.2 `ribbon.*` 键（M0 草案，由 ThemeBridge 播种）
 
-在 QTE Fluent Pack 中增加 `ribbon` 组（或本库提供 overlay Pack 合并进 Store），例如：
+M0 **不**改 QTE Pack 文件：换肤后 `ThemeBridge::ensureRibbonTokens` 从 `palette.*` 派生并写入 Store。
 
-| 角色（草案） | 用途 |
-|--------------|------|
-| `ribbon/tab.height` | 标签行高度 |
-| `ribbon/group.height` | 经典模式组高 |
-| `ribbon/group.height.simplified` | 简化模式高度 |
-| `ribbon/group.padding` | 组内边距 |
-| `ribbon/icon.large` / `medium` / `small` | 图标档 |
-| `ribbon/bg` / `ribbon/border` / `ribbon/tab.*` | 壳表面色（若 Style 未覆盖） |
+| 角色 | 类型 | 默认 / 来源 |
+|------|------|-------------|
+| `ribbon/bar.height` | metric | 120 |
+| `ribbon/tab.height` | metric | 32 |
+| `ribbon/group.height` | metric | 88 |
+| `ribbon/group.padding` | metric | 6 |
+| `ribbon/border.width` | metric | 1 |
+| `ribbon/bg` | color | ← `palette/window` |
+| `ribbon/tab.row.bg` | color | ← `palette/window` |
+| `ribbon/panel.bg` | color | ← `palette/surface` |
+| `ribbon/border` | color | ← `palette/stroke` |
+| `ribbon/fg` / `fg.secondary` | color | ← `palette/text` / `text.tertiary` |
+| `ribbon/accent` | color | ← `palette/accent` |
 
-具体键名在 M0 与 QTE 对齐时冻结；本库**不**维护平行 JSON 真源（可有 demo overlay，SSOT 仍归 QTE Pack 或明确的 merge 链）。
+后续可将同名键合入 QTE Fluent Pack（SSOT 上收）；本库 Bridge 在键已存在时仍会在换肤时刷新派生色，保证与 palette 一致。
 
 ### 5.3 换肤
 
