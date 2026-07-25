@@ -18,8 +18,8 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 
 ## 状态
 
-**M1 已落地**：`RibbonTab` / `RibbonGroup` / `QAction` 按钮、Large→Medium→Small 均匀缩略、`qfr_gallery` 可演示。  
-下一阶段 **M2**（简化模式等）见 [开发方案](docs/zh/dev-plan.md)。
+**M2 已落地**：简化模式、组启动器、ScreenTip-lite、缩略 `maxSize` 回归。  
+下一阶段 **M3**（QAT）见 [开发方案](docs/zh/dev-plan.md)。
 
 ## 快速开始（Windows）
 

@@ -33,6 +33,12 @@ namespace qfluentribbon
 			return m_groups;
 		}
 
+		void setSimplified(bool simplified);
+		[[nodiscard]] bool isSimplified() const
+		{
+			return m_simplified;
+		}
+
 		void applyCollapse(int availableWidth);
 
 	public slots:
@@ -48,6 +54,7 @@ namespace qfluentribbon
 		ThemeBridge* m_bridge = nullptr;
 		QString m_title;
 		QList<RibbonGroup*> m_groups;
+		bool m_simplified = false;
 	};
 } // namespace qfluentribbon
 

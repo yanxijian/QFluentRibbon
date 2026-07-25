@@ -105,6 +105,10 @@ namespace qfluentribbon
 		{
 			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40);
+		}
 		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"),
 						 store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
 							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88));
@@ -125,6 +129,10 @@ namespace qfluentribbon
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("fg"), text);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), tertiary);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("accent"), accent);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.bg"), surface);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.fg"), text);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.fg.secondary"), tertiary);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.border"), stroke);
 
 		store->endUpdate();
 	}

@@ -15,8 +15,9 @@ namespace qfluentribbon::layout
 	};
 
 	/// Pick a uniform size tier so sum(widths) fits in availableWidth (padding excluded by caller).
-	/// Tiers tried in order: Large → Medium → Small. Always returns one size per group.
-	[[nodiscard]] QVector<RibbonItemSize> chooseUniformSizes(int availableWidth, const QVector<GroupWidthHints>& groups);
+	/// Tiers tried in order from maxSize down to Small. Always returns one size per group.
+	[[nodiscard]] QVector<RibbonItemSize> chooseUniformSizes(int availableWidth, const QVector<GroupWidthHints>& groups,
+															 RibbonItemSize maxSize = RibbonItemSize::Large);
 } // namespace qfluentribbon::layout
 
 #endif // __QFR_LAYOUT_COLLAPSE_H__

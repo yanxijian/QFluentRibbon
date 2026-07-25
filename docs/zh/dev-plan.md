@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-25（M1：Tab / Group / QAction + 均匀三档缩略）
+> **更新**：2026-07-25（M2：简化模式 / 组启动器 / ScreenTip-lite）
 
 ---
 
@@ -14,20 +14,19 @@
 
 | 结论 | 说明 |
 |------|------|
-| **M1 已完成** | `RibbonTab` / `RibbonGroup` / `QAction`→`QToolButton`；`chooseUniformSizes` Large→Medium→Small；Gallery 可切 Tab / 点命令 / 缩窗降档 |
+| **M2 已完成** | `setSimplified`；组对话框启动器；ScreenTip（标题+说明）；缩略 `maxSize` + 往复回归测 |
 | **双依赖、单皮肤源** | 功能依赖 Qt Widgets + QTE；视觉 SSOT 只认 ThemeStore |
 | **参考而非端口** | Fluent.Ribbon 提供信息架构与行为清单；API 按 Qt/`QAction` 习惯设计 |
-| **下一刀：M2** | 简化模式 / 组启动器 / ScreenTip |
+| **下一刀：M3** | Quick Access Bar |
 
-### M1 出站核对
+### M2 出站核对
 
 | 项 | 状态 |
 |----|------|
-| 多 Tab 切换 + 组标题 | `RibbonBar` + `QTabBar` / `QStackedWidget` |
-| 组内 `QAction` → 大/中/小按钮 | `RibbonGroup` + 点击触发 |
-| ≥2 档宽度缩略（实为 3 档均匀降级） | `layout::chooseUniformSizes` + `qfr_tests` |
-| Gallery | Home / Insert / View + 多组命令 |
-| 无 Ribbon 私有 QSS | 遵守 |
+| `RibbonBar::setSimplified` 经典 ↔ 简化 | 已接；Gallery 勾选框 |
+| 组启动器（右下角 ⌟） | `RibbonGroup::setDialogLauncher` |
+| ScreenTip 标题+说明 | `ScreenTip::set` + 悬停弹层 |
+| 缩略 maxSize / 窄↔宽回归 | `chooseUniformSizes(..., maxSize)` + tests |
 
 ## 3. 原则（红线）
 

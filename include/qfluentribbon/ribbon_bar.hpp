@@ -34,6 +34,12 @@ namespace qfluentribbon
 		[[nodiscard]] int currentIndex() const;
 		void setCurrentIndex(int index);
 
+		void setSimplified(bool simplified);
+		[[nodiscard]] bool isSimplified() const
+		{
+			return m_simplified;
+		}
+
 		[[nodiscard]] QList<RibbonTab*> tabs() const
 		{
 			return m_tabs;
@@ -47,6 +53,7 @@ namespace qfluentribbon
 
 	signals:
 		void currentChanged(int index);
+		void simplifiedChanged(bool simplified);
 
 	protected:
 		void paintEvent(QPaintEvent* event) override;
@@ -54,6 +61,7 @@ namespace qfluentribbon
 
 	private:
 		void rebuildChrome();
+		void syncBarHeightMetric();
 		[[nodiscard]] int tabRowHeight() const;
 		[[nodiscard]] int panelHeight() const;
 		[[nodiscard]] int barHeight() const;
@@ -62,6 +70,7 @@ namespace qfluentribbon
 		QTabBar* m_tabBar = nullptr;
 		QStackedWidget* m_stack = nullptr;
 		QList<RibbonTab*> m_tabs;
+		bool m_simplified = false;
 	};
 } // namespace qfluentribbon
 

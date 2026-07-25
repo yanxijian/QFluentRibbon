@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M1 tabs/groups/actions + collapse)
+> **Updated**: 2026-07-25 (M2 simplified / launcher / ScreenTip)
 
 ## Goal
 
@@ -10,9 +10,9 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 
 ## Posture
 
-- **M1 done**: `RibbonTab` / `RibbonGroup` / `QAction`→`QToolButton`; uniform Large→Medium→Small collapse; gallery demo.
+- **M2 done**: `setSimplified`, group dialog launcher, ScreenTip-lite, collapse `maxSize` + widen/narrow tests.
 - Single visual SSOT: ThemeStore. No parallel QSS theme.
-- Next: **M2** simplified mode / launcher / ScreenTip-lite.
+- Next: **M3** Quick Access Bar.
 
 ## Milestones (short)
 

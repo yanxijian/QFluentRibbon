@@ -44,6 +44,19 @@ namespace qfluentribbon
 			return m_itemSize;
 		}
 
+		void setSimplified(bool simplified);
+		[[nodiscard]] bool isSimplified() const
+		{
+			return m_simplified;
+		}
+
+		/// Office-style dialog launcher in the group title band (bottom-right).
+		void setDialogLauncher(QAction* action);
+		[[nodiscard]] QAction* dialogLauncher() const
+		{
+			return m_launcherAction;
+		}
+
 		[[nodiscard]] layout::GroupWidthHints widthHints() const;
 		[[nodiscard]] QSize sizeHint() const override;
 		[[nodiscard]] QSize minimumSizeHint() const override;
@@ -51,23 +64,31 @@ namespace qfluentribbon
 	public slots:
 		void polishFromStore();
 
+	signals:
+		void dialogLauncherClicked();
+
 	protected:
 		void paintEvent(QPaintEvent* event) override;
 		void resizeEvent(QResizeEvent* event) override;
 
 	private:
 		void rebuildButtons();
+		void ensureLauncherButton();
 		void relayoutButtons();
 		void applyButtonStyle(QToolButton* button) const;
 		[[nodiscard]] bool actionHasIcon(const QToolButton* button) const;
 		[[nodiscard]] int titleBandHeight() const;
 		[[nodiscard]] int contentHeight() const;
+		[[nodiscard]] int launcherReserve() const;
 
 		ThemeBridge* m_bridge = nullptr;
 		QString m_title;
 		RibbonItemSize m_itemSize = RibbonItemSize::Large;
+		bool m_simplified = false;
 		QList<QAction*> m_actions;
 		QList<QToolButton*> m_buttons;
+		QAction* m_launcherAction = nullptr;
+		QToolButton* m_launcherButton = nullptr;
 	};
 } // namespace qfluentribbon
 

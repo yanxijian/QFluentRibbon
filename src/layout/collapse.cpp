@@ -6,23 +6,26 @@ namespace qfluentribbon::layout
 {
 	namespace
 	{
+		int widthOf(RibbonItemSize size, const GroupWidthHints& g)
+		{
+			switch (size)
+			{
+			case RibbonItemSize::Large:
+				return g.large;
+			case RibbonItemSize::Medium:
+				return g.medium;
+			case RibbonItemSize::Small:
+				return g.small;
+			}
+			return g.small;
+		}
+
 		int sumFor(RibbonItemSize size, const QVector<GroupWidthHints>& groups)
 		{
 			int total = 0;
 			for (const GroupWidthHints& g : groups)
 			{
-				switch (size)
-				{
-				case RibbonItemSize::Large:
-					total += g.large;
-					break;
-				case RibbonItemSize::Medium:
-					total += g.medium;
-					break;
-				case RibbonItemSize::Small:
-					total += g.small;
-					break;
-				}
+				total += widthOf(size, g);
 			}
 			return total;
 		}
@@ -33,7 +36,7 @@ namespace qfluentribbon::layout
 		}
 	} // namespace
 
-	QVector<RibbonItemSize> chooseUniformSizes(int availableWidth, const QVector<GroupWidthHints>& groups)
+	QVector<RibbonItemSize> chooseUniformSizes(int availableWidth, const QVector<GroupWidthHints>& groups, RibbonItemSize maxSize)
 	{
 		const int n = groups.size();
 		if (n == 0)
@@ -41,13 +44,19 @@ namespace qfluentribbon::layout
 			return {};
 		}
 		const int budget = qMax(0, availableWidth);
-		if (sumFor(RibbonItemSize::Large, groups) <= budget)
+
+		// Try largest allowed tier first, then step down (Large=0 … Small=2).
+		const RibbonItemSize candidates[] = {RibbonItemSize::Large, RibbonItemSize::Medium, RibbonItemSize::Small};
+		for (RibbonItemSize size : candidates)
 		{
-			return fill(RibbonItemSize::Large, n);
-		}
-		if (sumFor(RibbonItemSize::Medium, groups) <= budget)
-		{
-			return fill(RibbonItemSize::Medium, n);
+			if (static_cast<int>(size) < static_cast<int>(maxSize))
+			{
+				continue;
+			}
+			if (sumFor(size, groups) <= budget)
+			{
+				return fill(size, n);
+			}
 		}
 		return fill(RibbonItemSize::Small, n);
 	}

@@ -1,8 +1,11 @@
 #include "qfluentribbon/ribbon_bar.hpp"
 
 #include "qfluentribbon/ribbon_tab.hpp"
+#include "qfluentribbon/screen_tip.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
 #include "qtheme/api.hpp"
+#include "qtheme/engine.hpp"
+#include "qtheme/store.hpp"
 
 #include <QPaintEvent>
 #include <QPainter>
@@ -36,6 +39,8 @@ namespace qfluentribbon
 					}
 					emit currentChanged(index);
 				});
+
+		ScreenTip::install(this);
 	}
 
 	void RibbonBar::setThemeBridge(ThemeBridge* bridge)
@@ -64,6 +69,7 @@ namespace qfluentribbon
 	{
 		auto* tab = new RibbonTab(title, m_stack);
 		tab->setThemeBridge(m_bridge);
+		tab->setSimplified(m_simplified);
 		m_tabs.append(tab);
 		m_stack->addWidget(tab);
 		m_tabBar->addTab(title);
@@ -102,6 +108,28 @@ namespace qfluentribbon
 		}
 		m_tabBar->setCurrentIndex(index);
 		m_stack->setCurrentIndex(index);
+	}
+
+	void RibbonBar::setSimplified(bool simplified)
+	{
+		if (m_simplified == simplified)
+		{
+			return;
+		}
+		m_simplified = simplified;
+		for (RibbonTab* tab : m_tabs)
+		{
+			tab->setSimplified(simplified);
+		}
+		syncBarHeightMetric();
+		updateGeometry();
+		rebuildChrome();
+		if (parentWidget())
+		{
+			parentWidget()->updateGeometry();
+		}
+		emit simplifiedChanged(m_simplified);
+		update();
 	}
 
 	QSize RibbonBar::sizeHint() const
@@ -152,6 +180,7 @@ namespace qfluentribbon
 			tab->polishFromStore();
 		}
 
+		syncBarHeightMetric();
 		updateGeometry();
 		rebuildChrome();
 		update();
@@ -199,6 +228,19 @@ namespace qfluentribbon
 		{
 			m_stack->setGeometry(0, tabH, width(), panelH);
 		}
+		setFixedHeight(tabH + panelH);
+	}
+
+	void RibbonBar::syncBarHeightMetric()
+	{
+		if (!m_bridge || !m_bridge->engine() || !m_bridge->engine()->store())
+		{
+			return;
+		}
+		auto* store = m_bridge->engine()->store();
+		store->beginUpdate();
+		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), tabRowHeight() + panelHeight());
+		store->endUpdate();
 	}
 
 	int RibbonBar::tabRowHeight() const
@@ -208,16 +250,15 @@ namespace qfluentribbon
 
 	int RibbonBar::panelHeight() const
 	{
+		if (m_simplified)
+		{
+			return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40);
+		}
 		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88);
 	}
 
 	int RibbonBar::barHeight() const
 	{
-		const int seeded = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), 0);
-		if (seeded > 0)
-		{
-			return seeded;
-		}
 		return tabRowHeight() + panelHeight();
 	}
 } // namespace qfluentribbon

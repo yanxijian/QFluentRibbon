@@ -1,4 +1,4 @@
-# Build (M1)
+# Build (M2)
 
 > **中文主文档**：[../zh/build.md](../zh/build.md)
 
@@ -13,4 +13,4 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-M1: tabs/groups/actions; narrow the window for Large→Medium→Small; Skin combo still follows QTE (no Ribbon QSS).
+M2: Simplified toggle, group launchers, ScreenTip on hover; Skin combo still follows QTE (no Ribbon QSS).

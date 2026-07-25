@@ -1,6 +1,7 @@
 #include "qfluentribbon/ribbon_tab.hpp"
 
 #include "qfluentribbon/ribbon_group.hpp"
+#include "qfluentribbon/ribbon_types.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
 #include "qtheme/api.hpp"
 
@@ -48,10 +49,26 @@ namespace qfluentribbon
 	{
 		auto* group = new RibbonGroup(title, this);
 		group->setThemeBridge(m_bridge);
+		group->setSimplified(m_simplified);
 		m_groups.append(group);
 		group->show();
 		relayout();
 		return group;
+	}
+
+	void RibbonTab::setSimplified(bool simplified)
+	{
+		if (m_simplified == simplified)
+		{
+			return;
+		}
+		m_simplified = simplified;
+		for (RibbonGroup* group : m_groups)
+		{
+			group->setSimplified(simplified);
+		}
+		applyCollapse(width());
+		updateGeometry();
 	}
 
 	void RibbonTab::applyCollapse(int availableWidth)
@@ -62,7 +79,8 @@ namespace qfluentribbon
 		{
 			hints.append(group->widthHints());
 		}
-		const QVector<RibbonItemSize> sizes = layout::chooseUniformSizes(availableWidth, hints);
+		const RibbonItemSize maxSize = m_simplified ? RibbonItemSize::Medium : RibbonItemSize::Large;
+		const QVector<RibbonItemSize> sizes = layout::chooseUniformSizes(availableWidth, hints, maxSize);
 		for (int i = 0; i < m_groups.size() && i < sizes.size(); ++i)
 		{
 			m_groups[i]->setItemSize(sizes[i]);

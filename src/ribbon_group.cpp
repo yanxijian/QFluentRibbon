@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QResizeEvent>
 #include <QToolButton>
+#include <QVariant>
 #include <QtGlobal>
 
 namespace qfluentribbon
@@ -88,6 +89,10 @@ namespace qfluentribbon
 
 	void RibbonGroup::setItemSize(RibbonItemSize size)
 	{
+		if (m_simplified && size == RibbonItemSize::Large)
+		{
+			size = RibbonItemSize::Medium;
+		}
 		if (m_itemSize == size)
 		{
 			return;
@@ -96,18 +101,46 @@ namespace qfluentribbon
 		rebuildButtons();
 	}
 
+	void RibbonGroup::setSimplified(bool simplified)
+	{
+		if (m_simplified == simplified)
+		{
+			return;
+		}
+		m_simplified = simplified;
+		if (m_simplified && m_itemSize == RibbonItemSize::Large)
+		{
+			m_itemSize = RibbonItemSize::Medium;
+		}
+		rebuildButtons();
+		updateGeometry();
+		update();
+	}
+
+	void RibbonGroup::setDialogLauncher(QAction* action)
+	{
+		if (m_launcherAction == action)
+		{
+			return;
+		}
+		m_launcherAction = action;
+		ensureLauncherButton();
+		relayoutButtons();
+		update();
+	}
+
 	layout::GroupWidthHints RibbonGroup::widthHints() const
 	{
 		layout::GroupWidthHints hints;
 		const int pad = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		const int n = qMax(1, m_actions.size());
-		// Approximate footprints used by collapse (keep in sync with rebuildButtons sizing).
-		hints.large = pad * 2 + n * (iconPx(RibbonItemSize::Large) + 28);
-		hints.medium = pad * 2 + n * 72;
-		hints.small = pad * 2 + n * 36;
-		hints.large = qMax(hints.large, 64);
-		hints.medium = qMax(hints.medium, 48);
-		hints.small = qMax(hints.small, 36);
+		const int launch = launcherReserve();
+		hints.large = pad * 2 + n * (iconPx(RibbonItemSize::Large) + 28) + launch;
+		hints.medium = pad * 2 + n * 72 + launch;
+		hints.small = pad * 2 + n * 36 + launch;
+		hints.large = qMax(hints.large, 64 + launch);
+		hints.medium = qMax(hints.medium, 48 + launch);
+		hints.small = qMax(hints.small, 36 + launch);
 		return hints;
 	}
 
@@ -141,6 +174,14 @@ namespace qfluentribbon
 		{
 			applyButtonStyle(button);
 		}
+		if (m_launcherButton)
+		{
+			const QColor fg =
+				qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
+			QPalette pal = m_launcherButton->palette();
+			pal.setColor(QPalette::ButtonText, fg);
+			m_launcherButton->setPalette(pal);
+		}
 		updateGeometry();
 		update();
 		relayoutButtons();
@@ -155,9 +196,13 @@ namespace qfluentribbon
 		const int titleH = titleBandHeight();
 		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 
-		p.setPen(fg);
-		p.drawText(QRect(0, height() - titleH, width(), titleH), Qt::AlignCenter, m_title);
-		p.fillRect(QRect(width() - borderW, 4, borderW, height() - titleH - 8), border);
+		if (titleH > 0)
+		{
+			const int launch = launcherReserve();
+			p.setPen(fg);
+			p.drawText(QRect(0, height() - titleH, width() - launch, titleH), Qt::AlignCenter, m_title);
+		}
+		p.fillRect(QRect(width() - borderW, 4, borderW, height() - qMax(titleH, 8) - 4), border);
 	}
 
 	void RibbonGroup::resizeEvent(QResizeEvent* event)
@@ -177,13 +222,53 @@ namespace qfluentribbon
 			button->setDefaultAction(action);
 			button->setAutoRaise(true);
 			button->setFocusPolicy(Qt::TabFocus);
+			// Zero-width tip enables QEvent::ToolTip so ScreenTipFilter can run.
+			button->setToolTip(QStringLiteral("\u200B"));
 			applyButtonStyle(button);
 			button->show();
 			m_buttons.append(button);
 		}
+		ensureLauncherButton();
 		updateGeometry();
 		relayoutButtons();
 		update();
+	}
+
+	void RibbonGroup::ensureLauncherButton()
+	{
+		if (!m_launcherAction)
+		{
+			if (m_launcherButton)
+			{
+				delete m_launcherButton;
+				m_launcherButton = nullptr;
+			}
+			return;
+		}
+		if (!m_launcherButton)
+		{
+			m_launcherButton = new QToolButton(this);
+			m_launcherButton->setObjectName(QStringLiteral("qfr.RibbonGroup.launcher"));
+			m_launcherButton->setAutoRaise(true);
+			m_launcherButton->setFocusPolicy(Qt::TabFocus);
+			m_launcherButton->setToolButtonStyle(Qt::ToolButtonTextOnly);
+			m_launcherButton->setText(QStringLiteral("⌟"));
+			m_launcherButton->setToolTip(QStringLiteral("\u200B"));
+			connect(m_launcherButton, &QToolButton::clicked, this,
+					[this]()
+					{
+						if (m_launcherAction)
+						{
+							m_launcherAction->trigger();
+						}
+						emit dialogLauncherClicked();
+					});
+		}
+		m_launcherButton->setDefaultAction(nullptr);
+		m_launcherButton->setText(QStringLiteral("⌟"));
+		m_launcherButton->setProperty("qfr.launcherAction", QVariant::fromValue(m_launcherAction));
+		m_launcherButton->setVisible(!m_simplified);
+		m_launcherButton->setEnabled(m_launcherAction->isEnabled());
 	}
 
 	void RibbonGroup::applyButtonStyle(QToolButton* button) const
@@ -215,20 +300,31 @@ namespace qfluentribbon
 
 	int RibbonGroup::titleBandHeight() const
 	{
+		if (m_simplified)
+		{
+			return 0;
+		}
 		return 18;
 	}
 
 	int RibbonGroup::contentHeight() const
 	{
-		const int groupH = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88);
-		return qMax(40, groupH - titleBandHeight());
+		const QString key = m_simplified ? QStringLiteral("group.height.simplified") : QStringLiteral("group.height");
+		const int fallback = m_simplified ? 40 : 88;
+		const int groupH = qtheme::api::metric(QStringLiteral("ribbon"), key, fallback);
+		return qMax(24, groupH - titleBandHeight());
+	}
+
+	int RibbonGroup::launcherReserve() const
+	{
+		return (m_launcherAction && !m_simplified) ? 16 : 0;
 	}
 
 	void RibbonGroup::relayoutButtons()
 	{
 		const int pad = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		const int titleH = titleBandHeight();
-		const int areaH = qMax(1, height() - titleH - pad);
+		const int areaH = qMax(1, height() - titleH - (m_simplified ? 0 : pad));
 		int x = pad;
 		for (QToolButton* button : m_buttons)
 		{
@@ -250,9 +346,16 @@ namespace qfluentribbon
 				bh = qMin(areaH, qMax(bh, 24));
 				break;
 			}
-			const int y = pad + (areaH - bh) / 2;
+			const int y = (m_simplified ? 0 : pad) + (areaH - bh) / 2;
 			button->setGeometry(x, y, bw, bh);
 			x += bw + 4;
+		}
+
+		if (m_launcherButton && m_launcherButton->isVisible())
+		{
+			const int side = 14;
+			m_launcherButton->setGeometry(width() - side - 2, height() - titleH + (titleH - side) / 2, side, side);
+			m_launcherButton->raise();
 		}
 	}
 } // namespace qfluentribbon

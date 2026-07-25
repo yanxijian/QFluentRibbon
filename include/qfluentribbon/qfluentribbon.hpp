@@ -7,6 +7,7 @@
 #include "qfluentribbon/ribbon_tab.hpp"
 #include "qfluentribbon/ribbon_types.hpp"
 #include "qfluentribbon/ribbon_window.hpp"
+#include "qfluentribbon/screen_tip.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
 
 #endif // __QFR_QFLUENTRIBBON_H__

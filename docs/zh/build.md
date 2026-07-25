@@ -1,4 +1,4 @@
-# 构建说明（M1）
+# 构建说明（M2）
 
 > **English**：[../en/build.md](../en/build.md)
 
@@ -16,27 +16,17 @@
 :: vcvars x64，QTDIR 指向 Qt 前缀
 cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=%QTDIR% -DQFR_BUILD_TESTS=ON
 cmake --build build
-ctest --test-dir build -C Release --output-on-failure
+ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-可选：
+## M2 验收
 
-```bat
-cmake -S . -B build -G Ninja ^
-  -DCMAKE_PREFIX_PATH=%QTDIR% ^
-  -DQFR_QTE_SOURCE_DIR=D:\Codes\QThemeEngine ^
-  -DQFR_BUILD_EXAMPLES=ON ^
-  -DQFR_BUILD_TESTS=ON
-```
-
-## M1 验收
-
-1. 启动 `qfr_gallery`：顶部有真实 Tab（Home / Insert / View）与带标题的 Group。  
-2. 点击命令：下方状态行显示 `Triggered: …`。  
-3. 缩窄窗口：组内按钮由大图标+文案 → 中档 → 小档（图标或文字）。  
-4. Skin 下拉切换 Light / Dark / High Contrast：条带与面板色随之变化。  
-5. `qfr_tests` 通过（缩略规则 Large / Medium / Small）。
+1. Gallery 勾选 **Simplified ribbon**：条带变矮，组标题隐藏，命令不超过 Medium。  
+2. 悬停命令：ScreenTip 显示标题 + 说明。  
+3. 点击组右下角 ⌟：触发对话框启动器（Font 会弹出占位框）。  
+4. 缩窄/拉宽窗口：档位随宽度变化且无崩溃。  
+5. Skin 切换仍只靠 ThemeStore。
 
 ## 相关
 
