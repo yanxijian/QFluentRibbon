@@ -77,10 +77,6 @@ namespace qfluentribbon
 	{
 		store->beginUpdate();
 
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), 120);
-		}
 		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("tab.height")))
 		{
 			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32);
@@ -97,6 +93,21 @@ namespace qfluentribbon
 		{
 			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1);
 		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("icon.large")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
+		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
+		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		}
+		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"),
+						 store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
+							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88));
 
 		// Always refresh chrome colors from the active palette so light/dark/hc switches stay coherent.
 		const QColor window = storeColor(store, QStringLiteral("palette"), QStringLiteral("window"), QColor(QStringLiteral("#F3F3F3")));

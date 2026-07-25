@@ -74,17 +74,18 @@
 - 壳层与专用自绘：**只**通过 ThemeStore / `qtheme::api` 取色与度量。
 - **禁止**对 Ribbon 壳 `setStyleSheet` 作为主题通道。
 
-### 5.2 `ribbon.*` 键（M0 草案，由 ThemeBridge 播种）
+### 5.2 `ribbon.*` 键（ThemeBridge 播种；M1 含图标度量）
 
-M0 **不**改 QTE Pack 文件：换肤后 `ThemeBridge::ensureRibbonTokens` 从 `palette.*` 派生并写入 Store。
+**不**强制改 QTE Pack 文件：换肤后 `ThemeBridge::ensureRibbonTokens` 从 `palette.*` 派生色并写入 Store；度量缺省时播种。
 
 | 角色 | 类型 | 默认 / 来源 |
 |------|------|-------------|
-| `ribbon/bar.height` | metric | 120 |
+| `ribbon/bar.height` | metric | `tab.height` + `group.height` |
 | `ribbon/tab.height` | metric | 32 |
 | `ribbon/group.height` | metric | 88 |
 | `ribbon/group.padding` | metric | 6 |
 | `ribbon/border.width` | metric | 1 |
+| `ribbon/icon.large` / `medium` / `small` | metric | 32 / 16 / 16 |
 | `ribbon/bg` | color | ← `palette/window` |
 | `ribbon/tab.row.bg` | color | ← `palette/window` |
 | `ribbon/panel.bg` | color | ← `palette/surface` |

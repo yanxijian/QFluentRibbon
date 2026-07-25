@@ -58,10 +58,17 @@ endif()
 add_library(qfluentribbon
 	src/theme_bridge.cpp
 	src/ribbon_bar.cpp
+	src/ribbon_tab.cpp
+	src/ribbon_group.cpp
 	src/ribbon_window.cpp
+	src/layout/collapse.cpp
 	include/qfluentribbon/theme_bridge.hpp
 	include/qfluentribbon/ribbon_bar.hpp
+	include/qfluentribbon/ribbon_tab.hpp
+	include/qfluentribbon/ribbon_group.hpp
 	include/qfluentribbon/ribbon_window.hpp
+	include/qfluentribbon/ribbon_types.hpp
+	include/qfluentribbon/layout/collapse.hpp
 	include/qfluentribbon/qfluentribbon.hpp
 )
 add_library(QFluentRibbon::qfluentribbon ALIAS qfluentribbon)
@@ -96,4 +103,12 @@ if(QFR_BUILD_EXAMPLES)
 	endif()
 endif()
 
-message(STATUS "QFluentRibbon ${PROJECT_VERSION}: library + examples=${QFR_BUILD_EXAMPLES}")
+if(QFR_BUILD_TESTS)
+	find_package(Qt6 REQUIRED COMPONENTS Test)
+	enable_testing()
+	add_executable(qfr_tests tests/test_collapse.cpp)
+	target_link_libraries(qfr_tests PRIVATE qfluentribbon Qt6::Test)
+	add_test(NAME qfr_tests COMMAND qfr_tests)
+endif()
+
+message(STATUS "QFluentRibbon ${PROJECT_VERSION}: library + examples=${QFR_BUILD_EXAMPLES} tests=${QFR_BUILD_TESTS}")

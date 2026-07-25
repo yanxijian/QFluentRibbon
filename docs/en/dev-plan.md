@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M0 scaffold landed)
+> **Updated**: 2026-07-25 (M1 tabs/groups/actions + collapse)
 
 ## Goal
 
@@ -10,9 +10,9 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 
 ## Posture
 
-- **M0 done**: CMake↔QTE, `ThemeBridge`, placeholder `RibbonBar`/`RibbonWindow`, `qfr_gallery` skin switch.
+- **M1 done**: `RibbonTab` / `RibbonGroup` / `QAction`→`QToolButton`; uniform Large→Medium→Small collapse; gallery demo.
 - Single visual SSOT: ThemeStore. No parallel QSS theme.
-- Next: **M1** tabs / groups / `QAction` + basic collapse.
+- Next: **M2** simplified mode / launcher / ScreenTip-lite.
 
 ## Milestones (short)
 

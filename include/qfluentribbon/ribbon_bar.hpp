@@ -1,14 +1,21 @@
 #ifndef __QFR_RIBBON_BAR_H__
 #define __QFR_RIBBON_BAR_H__
 
+#include <QList>
 #include <QString>
 #include <QWidget>
 
+class QPaintEvent;
+class QResizeEvent;
+class QStackedWidget;
+class QTabBar;
+
 namespace qfluentribbon
 {
+	class RibbonTab;
 	class ThemeBridge;
 
-	/// M0 placeholder chrome: ThemeStore-backed strip (no QSS). Tabs/groups arrive in M1.
+	/// Classic ribbon chrome: tab strip + stacked RibbonTab panels (ThemeStore colors, no QSS).
 	class RibbonBar final : public QWidget
 	{
 		Q_OBJECT
@@ -21,10 +28,15 @@ namespace qfluentribbon
 			return m_bridge;
 		}
 
-		void setStatusText(const QString& text);
-		[[nodiscard]] QString statusText() const
+		[[nodiscard]] RibbonTab* addTab(const QString& title);
+		[[nodiscard]] RibbonTab* tabAt(int index) const;
+		[[nodiscard]] int tabCount() const;
+		[[nodiscard]] int currentIndex() const;
+		void setCurrentIndex(int index);
+
+		[[nodiscard]] QList<RibbonTab*> tabs() const
 		{
-			return m_statusText;
+			return m_tabs;
 		}
 
 		[[nodiscard]] QSize sizeHint() const override;
@@ -33,14 +45,23 @@ namespace qfluentribbon
 	public slots:
 		void polishFromStore();
 
+	signals:
+		void currentChanged(int index);
+
 	protected:
 		void paintEvent(QPaintEvent* event) override;
+		void resizeEvent(QResizeEvent* event) override;
 
 	private:
+		void rebuildChrome();
+		[[nodiscard]] int tabRowHeight() const;
+		[[nodiscard]] int panelHeight() const;
 		[[nodiscard]] int barHeight() const;
 
 		ThemeBridge* m_bridge = nullptr;
-		QString m_statusText;
+		QTabBar* m_tabBar = nullptr;
+		QStackedWidget* m_stack = nullptr;
+		QList<RibbonTab*> m_tabs;
 	};
 } // namespace qfluentribbon
 

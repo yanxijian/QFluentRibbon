@@ -18,15 +18,16 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 
 ## 状态
 
-**M0 已落地**：CMake 链 QTE、`ThemeBridge` + 可换肤 `RibbonBar` / `RibbonWindow`、`qfr_gallery` 可切 light/dark/hc。  
-下一阶段 **M1**（Tab / Group / QAction）见 [开发方案](docs/zh/dev-plan.md)。
+**M1 已落地**：`RibbonTab` / `RibbonGroup` / `QAction` 按钮、Large→Medium→Small 均匀缩略、`qfr_gallery` 可演示。  
+下一阶段 **M2**（简化模式等）见 [开发方案](docs/zh/dev-plan.md)。
 
 ## 快速开始（Windows）
 
 ```bat
 :: vcvars x64，设置 QTDIR；默认使用同级 ../QThemeEngine
-cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=%QTDIR%
+cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=%QTDIR% -DQFR_BUILD_TESTS=ON
 cmake --build build
+ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
@@ -53,9 +54,10 @@ build\qfr_gallery.exe
 ## 仓库布局
 
 ```text
-include/qfluentribbon/   公共 API（ThemeBridge / RibbonBar / RibbonWindow）
-src/                     实现
-examples/gallery/        M0 Showcase（换肤）
+include/qfluentribbon/   公共 API（Bar / Tab / Group / ThemeBridge）
+src/                     实现（含 layout/collapse）
+examples/gallery/        M1 Showcase（Tab / 命令 / 缩略 / 换肤）
+tests/                   缩略规则单测
 docs/zh|en/              中英文文档
 ```
 

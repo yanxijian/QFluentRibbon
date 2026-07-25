@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-25（M0 工程骨架落地：CMake↔QTE、ThemeBridge、RibbonBar 占位）
+> **更新**：2026-07-25（M1：Tab / Group / QAction + 均匀三档缩略）
 
 ---
 
@@ -14,18 +14,19 @@
 
 | 结论 | 说明 |
 |------|------|
-| **M0 已完成** | CMake 链 QTE；`ThemeBridge` 播种 `ribbon.*`；`RibbonBar`/`RibbonWindow` 占位；`qfr_gallery` 可切肤 |
+| **M1 已完成** | `RibbonTab` / `RibbonGroup` / `QAction`→`QToolButton`；`chooseUniformSizes` Large→Medium→Small；Gallery 可切 Tab / 点命令 / 缩窗降档 |
 | **双依赖、单皮肤源** | 功能依赖 Qt Widgets + QTE；视觉 SSOT 只认 ThemeStore |
 | **参考而非端口** | Fluent.Ribbon 提供信息架构与行为清单；API 按 Qt/`QAction` 习惯设计 |
-| **下一刀：M1** | Tab / Group / QAction + 基础缩略 |
+| **下一刀：M2** | 简化模式 / 组启动器 / ScreenTip |
 
-### M0 出站核对
+### M1 出站核对
 
 | 项 | 状态 |
 |----|------|
-| CMake `../QThemeEngine` / `QFR_QTE_SOURCE_DIR` / `find_package` | 已接 |
-| `Engine::apply` + light/dark/hc 切换条带变色 | Gallery 验收 |
-| `ribbon.*` 草案（Bridge 播种，键名见 ThemeBridge） | 已文档化于构建说明 / 架构 |
+| 多 Tab 切换 + 组标题 | `RibbonBar` + `QTabBar` / `QStackedWidget` |
+| 组内 `QAction` → 大/中/小按钮 | `RibbonGroup` + 点击触发 |
+| ≥2 档宽度缩略（实为 3 档均匀降级） | `layout::chooseUniformSizes` + `qfr_tests` |
+| Gallery | Home / Insert / View + 多组命令 |
 | 无 Ribbon 私有 QSS | 遵守 |
 
 ## 3. 原则（红线）

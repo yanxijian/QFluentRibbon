@@ -1,12 +1,14 @@
 #include "qfluentribbon/ribbon_bar.hpp"
 
+#include "qfluentribbon/ribbon_tab.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
-
 #include "qtheme/api.hpp"
-#include "qtheme/engine.hpp"
 
-#include <QPainter>
 #include <QPaintEvent>
+#include <QPainter>
+#include <QResizeEvent>
+#include <QStackedWidget>
+#include <QTabBar>
 
 namespace qfluentribbon
 {
@@ -15,7 +17,25 @@ namespace qfluentribbon
 	{
 		setObjectName(QStringLiteral("qfr.RibbonBar"));
 		setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-		m_statusText = QStringLiteral("RibbonBar (M0 placeholder)");
+
+		m_tabBar = new QTabBar(this);
+		m_tabBar->setObjectName(QStringLiteral("qfr.RibbonBar.tabs"));
+		m_tabBar->setExpanding(false);
+		m_tabBar->setDrawBase(false);
+		m_tabBar->setUsesScrollButtons(true);
+
+		m_stack = new QStackedWidget(this);
+		m_stack->setObjectName(QStringLiteral("qfr.RibbonBar.stack"));
+
+		connect(m_tabBar, &QTabBar::currentChanged, this,
+				[this](int index)
+				{
+					if (m_stack)
+					{
+						m_stack->setCurrentIndex(index);
+					}
+					emit currentChanged(index);
+				});
 	}
 
 	void RibbonBar::setThemeBridge(ThemeBridge* bridge)
@@ -33,17 +53,55 @@ namespace qfluentribbon
 		{
 			connect(m_bridge, &ThemeBridge::ribbonTokensChanged, this, &RibbonBar::polishFromStore);
 		}
+		for (RibbonTab* tab : m_tabs)
+		{
+			tab->setThemeBridge(bridge);
+		}
 		polishFromStore();
 	}
 
-	void RibbonBar::setStatusText(const QString& text)
+	RibbonTab* RibbonBar::addTab(const QString& title)
 	{
-		if (m_statusText == text)
+		auto* tab = new RibbonTab(title, m_stack);
+		tab->setThemeBridge(m_bridge);
+		m_tabs.append(tab);
+		m_stack->addWidget(tab);
+		m_tabBar->addTab(title);
+		if (m_tabs.size() == 1)
+		{
+			setCurrentIndex(0);
+		}
+		rebuildChrome();
+		return tab;
+	}
+
+	RibbonTab* RibbonBar::tabAt(int index) const
+	{
+		if (index < 0 || index >= m_tabs.size())
+		{
+			return nullptr;
+		}
+		return m_tabs.at(index);
+	}
+
+	int RibbonBar::tabCount() const
+	{
+		return m_tabs.size();
+	}
+
+	int RibbonBar::currentIndex() const
+	{
+		return m_tabBar ? m_tabBar->currentIndex() : -1;
+	}
+
+	void RibbonBar::setCurrentIndex(int index)
+	{
+		if (!m_tabBar || index < 0 || index >= m_tabs.size())
 		{
 			return;
 		}
-		m_statusText = text;
-		update();
+		m_tabBar->setCurrentIndex(index);
+		m_stack->setCurrentIndex(index);
 	}
 
 	QSize RibbonBar::sizeHint() const
@@ -58,53 +116,108 @@ namespace qfluentribbon
 
 	void RibbonBar::polishFromStore()
 	{
-		updateGeometry();
-		update();
-	}
+		const QColor bg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color());
+		const QColor panel = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color());
+		const QColor fg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg"), palette().windowText().color());
 
-	int RibbonBar::barHeight() const
-	{
-		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), 120);
+		QPalette barPal = palette();
+		barPal.setColor(QPalette::Window, bg);
+		barPal.setColor(QPalette::Base, bg);
+		barPal.setColor(QPalette::WindowText, fg);
+		barPal.setColor(QPalette::ButtonText, fg);
+		setPalette(barPal);
+		setAutoFillBackground(true);
+
+		if (m_tabBar)
+		{
+			QPalette tabPal = m_tabBar->palette();
+			tabPal.setColor(QPalette::Window, bg);
+			tabPal.setColor(QPalette::Button, bg);
+			tabPal.setColor(QPalette::WindowText, fg);
+			tabPal.setColor(QPalette::ButtonText, fg);
+			m_tabBar->setPalette(tabPal);
+			m_tabBar->setAutoFillBackground(true);
+		}
+		if (m_stack)
+		{
+			QPalette stackPal = m_stack->palette();
+			stackPal.setColor(QPalette::Window, panel);
+			stackPal.setColor(QPalette::Base, panel);
+			m_stack->setPalette(stackPal);
+			m_stack->setAutoFillBackground(true);
+		}
+
+		for (RibbonTab* tab : m_tabs)
+		{
+			tab->polishFromStore();
+		}
+
+		updateGeometry();
+		rebuildChrome();
+		update();
 	}
 
 	void RibbonBar::paintEvent(QPaintEvent* event)
 	{
 		Q_UNUSED(event);
 		QPainter p(this);
-		p.setRenderHint(QPainter::Antialiasing, false);
-
 		const QColor bg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color());
-		const QColor panel = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color());
 		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
-		const QColor fg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg"), palette().windowText().color());
-		const QColor fgSec =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
 		const QColor accent = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
-		const int tabH = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32);
 		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int tabH = tabRowHeight();
 
 		p.fillRect(rect(), bg);
-
-		const QRect tabRow(0, 0, width(), tabH);
-		p.fillRect(tabRow, bg);
-		p.setPen(fg);
-		p.drawText(tabRow.adjusted(12, 0, -12, 0), Qt::AlignVCenter | Qt::AlignLeft, QStringLiteral("Home   Insert   View"));
-
-		const QRect panelRow(0, tabH, width(), height() - tabH);
-		p.fillRect(panelRow, panel);
-		p.setPen(fg);
-		p.drawText(panelRow.adjusted(12, 8, -12, -8), Qt::AlignLeft | Qt::AlignTop, m_statusText);
-
-		QString skin = QStringLiteral("(no engine)");
-		if (m_bridge && m_bridge->engine())
-		{
-			skin = m_bridge->engine()->currentSkin();
-		}
-		p.setPen(fgSec);
-		p.drawText(panelRow.adjusted(12, 28, -12, -8), Qt::AlignLeft | Qt::AlignTop,
-				   QStringLiteral("Skin: %1  ·  colors from ThemeStore (no QSS)").arg(skin));
-
 		p.fillRect(QRect(0, height() - borderW, width(), borderW), border);
-		p.fillRect(QRect(12, tabH - 3, 36, 3), accent);
+
+		const int idx = currentIndex();
+		if (idx >= 0 && m_tabBar)
+		{
+			const QRect tabRect = m_tabBar->tabRect(idx).translated(m_tabBar->pos());
+			const int underlineW = qMax(24, tabRect.width() - 16);
+			const int underlineX = tabRect.center().x() - underlineW / 2;
+			p.fillRect(QRect(underlineX, tabH - 3, underlineW, 3), accent);
+		}
+	}
+
+	void RibbonBar::resizeEvent(QResizeEvent* event)
+	{
+		QWidget::resizeEvent(event);
+		rebuildChrome();
+	}
+
+	void RibbonBar::rebuildChrome()
+	{
+		const int tabH = tabRowHeight();
+		const int panelH = panelHeight();
+		if (m_tabBar)
+		{
+			m_tabBar->setGeometry(0, 0, width(), tabH);
+			m_tabBar->raise();
+		}
+		if (m_stack)
+		{
+			m_stack->setGeometry(0, tabH, width(), panelH);
+		}
+	}
+
+	int RibbonBar::tabRowHeight() const
+	{
+		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32);
+	}
+
+	int RibbonBar::panelHeight() const
+	{
+		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88);
+	}
+
+	int RibbonBar::barHeight() const
+	{
+		const int seeded = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), 0);
+		if (seeded > 0)
+		{
+			return seeded;
+		}
+		return tabRowHeight() + panelHeight();
 	}
 } // namespace qfluentribbon
