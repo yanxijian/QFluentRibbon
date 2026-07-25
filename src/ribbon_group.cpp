@@ -17,14 +17,16 @@ namespace qfluentribbon
 	{
 		int iconPx(RibbonItemSize size)
 		{
+			// Logical store metrics: QToolButton scales via devicePixelRatio.
+			// scaledMetric here would double-apply Engine dpiScale on high-DPI screens.
 			switch (size)
 			{
 			case RibbonItemSize::Large:
-				return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
+				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
 			case RibbonItemSize::Medium:
-				return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
+				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
 			case RibbonItemSize::Small:
-				return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 			}
 			return 16;
 		}
@@ -341,8 +343,7 @@ namespace qfluentribbon
 
 	int RibbonGroup::launcherReserve() const
 	{
-		return (m_launcherAction && !m_simplified) ? qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16)
-												   : 0;
+		return (m_launcherAction && !m_simplified) ? qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16) : 0;
 	}
 
 	void RibbonGroup::relayoutButtons()

@@ -60,7 +60,7 @@ namespace qfluentribbon
 
 	void RibbonGallery::polishFromStore()
 	{
-		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
+		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
 		for (Item& item : m_items)
 		{
 			if (item.button)

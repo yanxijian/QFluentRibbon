@@ -166,7 +166,7 @@ namespace qfluentribbon
 		setPalette(pal);
 		setAutoFillBackground(true);
 
-		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		for (QToolButton* button : m_buttons)
 		{
 			button->setIconSize(QSize(icon, icon));
@@ -226,7 +226,7 @@ namespace qfluentribbon
 		qDeleteAll(m_buttons);
 		m_buttons.clear();
 
-		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		for (QAction* action : m_actions)
 		{
 			auto* button = new QToolButton(this);
@@ -248,7 +248,7 @@ namespace qfluentribbon
 	{
 		const int pad = qMax(2, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) / 2);
 		const int h = qMax(1, height());
-		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		const int sideCap = qMax(icon + 4, h - 2);
 		int x = pad;
 		for (QToolButton* button : m_buttons)
