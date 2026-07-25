@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Qt6 REQUIRED COMPONENTS Widgets)
+find_dependency(QThemeEngine REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/QFluentRibbonTargets.cmake")
+
+check_required_components(QFluentRibbon)

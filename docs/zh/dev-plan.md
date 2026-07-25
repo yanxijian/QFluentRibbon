@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-25（M5：KeyTip + In-Ribbon Gallery）
+> **更新**：2026-07-25（M6：导出 / HCI·DPI 清单 / MPS 备忘）
 
 ---
 
@@ -14,18 +14,18 @@
 
 | 结论 | 说明 |
 |------|------|
-| **M5 已完成** | Alt KeyTip（Tab/QAT/命令）；`RibbonGallery` 子集入组 |
+| **M6 已完成** | `find_package(QFluentRibbon)` 安装导出；HCI/DPI 清单；MPS 接入备忘（不改 MPS） |
 | **双依赖、单皮肤源** | 功能依赖 Qt Widgets + QTE；视觉 SSOT 只认 ThemeStore |
 | **参考而非端口** | Fluent.Ribbon 提供信息架构与行为清单；API 按 Qt/`QAction` 习惯设计 |
-| **下一刀：M6** | HCI/DPI、`find_package`、可选 MPS 备忘 |
+| **里程碑** | M0–M6 主线交付齐；后续为打磨与真实产品接入 |
 
-### M5 出站核对
+### M6 出站核对
 
 | 项 | 状态 |
 |----|------|
-| Alt KeyTip 遍历 | `KeyTipService`（Esc 退出） |
-| In-Ribbon Gallery 子集 | `RibbonGallery` + `RibbonGroup::addWidget` |
-| Showcase | Home/Styles + Alt 提示 |
+| HCI / 高 DPI 清单 | [hci-dpi-checklist.md](hci-dpi-checklist.md) |
+| `find_package(QFluentRibbon)` | `QFR_INSTALL` + Config/Targets |
+| MPS Host 接入备忘 | [mps-integration.md](mps-integration.md)（只文档） |
 
 ## 3. 原则（红线）
 

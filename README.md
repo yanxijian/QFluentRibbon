@@ -18,8 +18,8 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 
 ## 状态
 
-**M5 已落地**：Alt KeyTip、`RibbonGallery`（Styles 组）。  
-下一阶段 **M6**（打磨 / 导出）见 [开发方案](docs/zh/dev-plan.md)。
+**M0–M6 主线已落地**（Tab/Group、缩略、简化、ScreenTip、QAT、Backstage、KeyTip、Gallery、`find_package` 导出）。  
+HCI/DPI 抽测见 [检查清单](docs/zh/hci-dpi-checklist.md)；MPS 接入见 [备忘](docs/zh/mps-integration.md)。
 
 ## 快速开始（Windows）
 
@@ -39,7 +39,9 @@ build\qfr_gallery.exe
 |------|------|---------|
 | 架构（权威） | [architecture.md](docs/zh/architecture.md) | [architecture.md](docs/en/architecture.md) |
 | 开发方案 / 计划 | [dev-plan.md](docs/zh/dev-plan.md) | [dev-plan.md](docs/en/dev-plan.md) |
-| 构建 | [build.md](docs/zh/build.md) | [build.md](docs/en/build.md) |
+| 构建 / 安装 | [build.md](docs/zh/build.md) | [build.md](docs/en/build.md) |
+| HCI / 高 DPI | [hci-dpi-checklist.md](docs/zh/hci-dpi-checklist.md) | [hci-dpi-checklist.md](docs/en/hci-dpi-checklist.md) |
+| MPS 接入备忘 | [mps-integration.md](docs/zh/mps-integration.md) | [mps-integration.md](docs/en/mps-integration.md) |
 
 日常以中文文档为准。
 
@@ -54,10 +56,11 @@ build\qfr_gallery.exe
 ## 仓库布局
 
 ```text
-include/qfluentribbon/   公共 API（Bar / Tab / Group / ThemeBridge）
+include/qfluentribbon/   公共 API
 src/                     实现（含 layout/collapse）
-examples/gallery/        M1 Showcase（Tab / 命令 / 缩略 / 换肤）
-tests/                   缩略规则单测
+cmake/                   安装用 Config 模板
+examples/gallery/        Showcase
+tests/                   布局 / QAT 单测
 docs/zh|en/              中英文文档
 ```
 

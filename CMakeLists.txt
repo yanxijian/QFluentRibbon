@@ -13,6 +13,10 @@ endif()
 
 option(QFR_BUILD_EXAMPLES "Build gallery example" ON)
 option(QFR_BUILD_TESTS "Build tests" OFF)
+# Default OFF so sibling ../QThemeEngine builds keep working; ON for package export (needs installed QTE).
+option(QFR_INSTALL "Install library, headers, and CMake package (requires imported QThemeEngine::engine)" OFF)
+
+include(GNUInstallDirs)
 
 # QTE: sibling path / -DQFR_QTE_SOURCE_DIR=... / find_package(QThemeEngine)
 set(QFR_QTE_SOURCE_DIR "" CACHE PATH "Path to QThemeEngine sources (optional; default ../QThemeEngine)")
@@ -23,6 +27,7 @@ endif()
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 set(_qfr_have_qte_target FALSE)
+set(QFR_QTE_VIA_SOURCE FALSE)
 if(TARGET QThemeEngine::engine OR TARGET qtheme_engine)
 	set(_qfr_have_qte_target TRUE)
 elseif(QFR_QTE_SOURCE_DIR AND EXISTS "${QFR_QTE_SOURCE_DIR}/CMakeLists.txt")
@@ -32,6 +37,7 @@ elseif(QFR_QTE_SOURCE_DIR AND EXISTS "${QFR_QTE_SOURCE_DIR}/CMakeLists.txt")
 	set(QTE_INSTALL OFF CACHE BOOL "" FORCE)
 	add_subdirectory("${QFR_QTE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/_deps/qthemeengine" EXCLUDE_FROM_ALL)
 	set(_qfr_have_qte_target TRUE)
+	set(QFR_QTE_VIA_SOURCE TRUE)
 	message(STATUS "QFluentRibbon: using QThemeEngine from ${QFR_QTE_SOURCE_DIR}")
 else()
 	find_package(QThemeEngine CONFIG QUIET)
@@ -93,6 +99,7 @@ target_link_libraries(qfluentribbon PUBLIC Qt6::Widgets ${QFR_QTE_TARGET})
 
 set_target_properties(qfluentribbon PROPERTIES
 	OUTPUT_NAME qfluentribbon
+	EXPORT_NAME qfluentribbon
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 )
@@ -125,4 +132,57 @@ if(QFR_BUILD_TESTS)
 	add_test(NAME qfr_qat_tests COMMAND qfr_qat_tests)
 endif()
 
-message(STATUS "QFluentRibbon ${PROJECT_VERSION}: library + examples=${QFR_BUILD_EXAMPLES} tests=${QFR_BUILD_TESTS}")
+if(QFR_INSTALL)
+	# Exportable package requires installed QTE, not in-tree add_subdirectory.
+	if(QFR_QTE_VIA_SOURCE)
+		message(FATAL_ERROR
+			"QFR_INSTALL=ON is incompatible with in-tree QThemeEngine (QFR_QTE_SOURCE_DIR / ../QThemeEngine).\n"
+			"Install QTE first, clear QFR_QTE_SOURCE_DIR, configure with -DCMAKE_PREFIX_PATH=<qt>;<qte-prefix> -DQFR_INSTALL=ON.\n"
+			"Sibling day-to-day builds: leave QFR_INSTALL=OFF.")
+	endif()
+	if(NOT TARGET QThemeEngine::engine)
+		message(FATAL_ERROR
+			"QFR_INSTALL=ON requires find_package(QThemeEngine) providing QThemeEngine::engine.")
+	endif()
+
+	include(CMakePackageConfigHelpers)
+
+	install(TARGETS qfluentribbon
+		EXPORT QFluentRibbonTargets
+		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+		INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	)
+
+	install(DIRECTORY include/qfluentribbon
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+		FILES_MATCHING PATTERN "*.hpp"
+	)
+
+	install(EXPORT QFluentRibbonTargets
+		FILE QFluentRibbonTargets.cmake
+		NAMESPACE QFluentRibbon::
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/QFluentRibbon
+	)
+
+	configure_package_config_file(
+		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/QFluentRibbonConfig.cmake.in"
+		"${CMAKE_CURRENT_BINARY_DIR}/QFluentRibbonConfig.cmake"
+		INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/QFluentRibbon
+	)
+
+	write_basic_package_version_file(
+		"${CMAKE_CURRENT_BINARY_DIR}/QFluentRibbonConfigVersion.cmake"
+		VERSION ${PROJECT_VERSION}
+		COMPATIBILITY SameMajorVersion
+	)
+
+	install(FILES
+		"${CMAKE_CURRENT_BINARY_DIR}/QFluentRibbonConfig.cmake"
+		"${CMAKE_CURRENT_BINARY_DIR}/QFluentRibbonConfigVersion.cmake"
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/QFluentRibbon
+	)
+endif()
+
+message(STATUS "QFluentRibbon ${PROJECT_VERSION}: library + examples=${QFR_BUILD_EXAMPLES} tests=${QFR_BUILD_TESTS} install=${QFR_INSTALL}")

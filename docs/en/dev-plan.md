@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M5 KeyTip + Gallery)
+> **Updated**: 2026-07-25 (M6 polish / export)
 
 ## Goal
 
@@ -10,9 +10,9 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 
 ## Posture
 
-- **M5 done**: Alt KeyTips; `RibbonGallery` subset in groups.
+- **M6 done**: `find_package(QFluentRibbon)` install export; HCI/DPI checklist; optional MPS integration notes.
+- M0–M6 mainline complete; further work is polish and product embedding.
 - Single visual SSOT: ThemeStore. No parallel QSS theme.
-- Next: **M6** HC/DPI, `find_package`, optional MPS notes.
 
 ## Milestones (short)
 
@@ -32,4 +32,4 @@ No Ribbon-private QSS; owner-draw reads ThemeStore only; prefer native widgets i
 
 ## Related
 
-[architecture.md](architecture.md) · [QThemeEngine](https://github.com/yanxijian/QThemeEngine) · [Fluent.Ribbon](https://github.com/fluentribbon/Fluent.Ribbon) (reference)
+[architecture.md](architecture.md) · [hci-dpi-checklist.md](hci-dpi-checklist.md) · [mps-integration.md](mps-integration.md) · [QThemeEngine](https://github.com/yanxijian/QThemeEngine)

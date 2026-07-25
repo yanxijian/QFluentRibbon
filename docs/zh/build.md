@@ -1,4 +1,4 @@
-# 构建说明（M5）
+# 构建说明（M6）
 
 > **English**：[../en/build.md](../en/build.md)
 
@@ -7,7 +7,7 @@
 | 项 | 说明 |
 |----|------|
 | Qt | 6.8+ Widgets（测试需 Test） |
-| QThemeEngine | 默认使用同级目录 `../QThemeEngine`；或 `-DQFR_QTE_SOURCE_DIR=` / 已安装的 `find_package` |
+| QThemeEngine | 默认同级 `../QThemeEngine`；或 `-DQFR_QTE_SOURCE_DIR=` / 已安装的 `find_package` |
 | 工具链 | CMake 3.21+、Ninja；Windows 上 MSVC x64（`vcvars`） |
 
 ## Windows 快速构建
@@ -20,13 +20,36 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-## M5 验收
+## 安装与 `find_package`
 
-1. 按 **Alt** 显示 KeyTip 角标；输入字母激活 Tab/命令；**Esc** 退出。  
-2. Home → **Styles** 组内可见横向 Gallery（Normal / Title / Quote）。  
-3. 点击 Gallery 项触发对应 action。  
-4. 既有 QAT / Backstage / Simplified 仍可用。
+旁路开发（同级 `../QThemeEngine`）：保持 `-DQFR_INSTALL=OFF`（默认）。
+
+可安装包需 **先安装 QTE**，再用 `find_package(QThemeEngine)` 配置本库：
+
+```bat
+cmake --install path\to\QThemeEngine\build --prefix D:\prefix
+cmake -S . -B build-install -G Ninja ^
+  -DCMAKE_PREFIX_PATH=%QTDIR%;D:\prefix ^
+  -DQFR_QTE_SOURCE_DIR= ^
+  -DQFR_INSTALL=ON
+cmake --build build-install
+cmake --install build-install --prefix D:\prefix
+```
+
+消费方：
+
+```cmake
+find_package(QThemeEngine REQUIRED)
+find_package(QFluentRibbon REQUIRED)
+target_link_libraries(app PRIVATE QFluentRibbon::qfluentribbon)
+```
+
+## M6 验收
+
+1. `-DQFR_INSTALL=ON` 可配置；`cmake --install` 产出 headers + cmake 包。  
+2. 文档：[HCI/DPI 清单](hci-dpi-checklist.md)、[MPS 接入备忘](mps-integration.md)。  
+3. Gallery 在 light/dark/hc 与至少两种 DPI 下按清单抽测。
 
 ## 相关
 
-- [architecture.md](architecture.md) · [dev-plan.md](dev-plan.md)
+- [architecture.md](architecture.md) · [dev-plan.md](dev-plan.md) · [hci-dpi-checklist.md](hci-dpi-checklist.md) · [mps-integration.md](mps-integration.md)
