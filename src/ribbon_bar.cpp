@@ -1,5 +1,6 @@
 #include "qfluentribbon/ribbon_bar.hpp"
 
+#include "qfluentribbon/quick_access_bar.hpp"
 #include "qfluentribbon/ribbon_tab.hpp"
 #include "qfluentribbon/screen_tip.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
@@ -21,6 +22,9 @@ namespace qfluentribbon
 		setObjectName(QStringLiteral("qfr.RibbonBar"));
 		setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
+		m_qat = new QuickAccessBar(this);
+		m_qat->setObjectName(QStringLiteral("qfr.RibbonBar.qat"));
+
 		m_tabBar = new QTabBar(this);
 		m_tabBar->setObjectName(QStringLiteral("qfr.RibbonBar.tabs"));
 		m_tabBar->setExpanding(false);
@@ -38,6 +42,12 @@ namespace qfluentribbon
 						m_stack->setCurrentIndex(index);
 					}
 					emit currentChanged(index);
+				});
+		connect(m_qat, &QuickAccessBar::actionsChanged, this,
+				[this]()
+				{
+					rebuildChrome();
+					update();
 				});
 
 		ScreenTip::install(this);
@@ -57,6 +67,10 @@ namespace qfluentribbon
 		if (m_bridge)
 		{
 			connect(m_bridge, &ThemeBridge::ribbonTokensChanged, this, &RibbonBar::polishFromStore);
+		}
+		if (m_qat)
+		{
+			m_qat->setThemeBridge(bridge);
 		}
 		for (RibbonTab* tab : m_tabs)
 		{
@@ -156,6 +170,10 @@ namespace qfluentribbon
 		setPalette(barPal);
 		setAutoFillBackground(true);
 
+		if (m_qat)
+		{
+			m_qat->polishFromStore();
+		}
 		if (m_tabBar)
 		{
 			QPalette tabPal = m_tabBar->palette();
@@ -194,6 +212,7 @@ namespace qfluentribbon
 		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
 		const QColor accent = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
 		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int qatH = qatRowHeight();
 		const int tabH = tabRowHeight();
 
 		p.fillRect(rect(), bg);
@@ -205,7 +224,7 @@ namespace qfluentribbon
 			const QRect tabRect = m_tabBar->tabRect(idx).translated(m_tabBar->pos());
 			const int underlineW = qMax(24, tabRect.width() - 16);
 			const int underlineX = tabRect.center().x() - underlineW / 2;
-			p.fillRect(QRect(underlineX, tabH - 3, underlineW, 3), accent);
+			p.fillRect(QRect(underlineX, qatH + tabH - 3, underlineW, 3), accent);
 		}
 	}
 
@@ -217,18 +236,24 @@ namespace qfluentribbon
 
 	void RibbonBar::rebuildChrome()
 	{
+		const int qatH = qatRowHeight();
 		const int tabH = tabRowHeight();
 		const int panelH = panelHeight();
+		if (m_qat)
+		{
+			m_qat->setGeometry(0, 0, width(), qatH);
+			m_qat->raise();
+		}
 		if (m_tabBar)
 		{
-			m_tabBar->setGeometry(0, 0, width(), tabH);
+			m_tabBar->setGeometry(0, qatH, width(), tabH);
 			m_tabBar->raise();
 		}
 		if (m_stack)
 		{
-			m_stack->setGeometry(0, tabH, width(), panelH);
+			m_stack->setGeometry(0, qatH + tabH, width(), panelH);
 		}
-		setFixedHeight(tabH + panelH);
+		setFixedHeight(qatH + tabH + panelH);
 	}
 
 	void RibbonBar::syncBarHeightMetric()
@@ -239,8 +264,13 @@ namespace qfluentribbon
 		}
 		auto* store = m_bridge->engine()->store();
 		store->beginUpdate();
-		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), tabRowHeight() + panelHeight());
+		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), barHeight());
 		store->endUpdate();
+	}
+
+	int RibbonBar::qatRowHeight() const
+	{
+		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
 	}
 
 	int RibbonBar::tabRowHeight() const
@@ -259,6 +289,6 @@ namespace qfluentribbon
 
 	int RibbonBar::barHeight() const
 	{
-		return tabRowHeight() + panelHeight();
+		return qatRowHeight() + tabRowHeight() + panelHeight();
 	}
 } // namespace qfluentribbon

@@ -1,4 +1,4 @@
-# 构建说明（M2）
+# 构建说明（M3）
 
 > **English**：[../en/build.md](../en/build.md)
 
@@ -20,13 +20,12 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-## M2 验收
+## M3 验收
 
-1. Gallery 勾选 **Simplified ribbon**：条带变矮，组标题隐藏，命令不超过 Medium。  
-2. 悬停命令：ScreenTip 显示标题 + 说明。  
-3. 点击组右下角 ⌟：触发对话框启动器（Font 会弹出占位框）。  
-4. 缩窄/拉宽窗口：档位随宽度变化且无崩溃。  
-5. Skin 切换仍只靠 ThemeStore。
+1. Gallery 顶部 Tab 上方可见 QAT 图标条（默认 Paste / Bold，或上次保存的集合）。  
+2. 用「Pin to QAT」钉上 Copy / Grid；右键 QAT 图标可卸钉。  
+3. 关闭再开 Gallery：钉住集合经 `QSettings` 恢复。  
+4. Skin / Simplified 仍可用。
 
 ## 相关
 

@@ -62,6 +62,7 @@ add_library(qfluentribbon
 	src/ribbon_group.cpp
 	src/ribbon_window.cpp
 	src/screen_tip.cpp
+	src/quick_access_bar.cpp
 	src/layout/collapse.cpp
 	include/qfluentribbon/theme_bridge.hpp
 	include/qfluentribbon/ribbon_bar.hpp
@@ -70,6 +71,7 @@ add_library(qfluentribbon
 	include/qfluentribbon/ribbon_window.hpp
 	include/qfluentribbon/ribbon_types.hpp
 	include/qfluentribbon/screen_tip.hpp
+	include/qfluentribbon/quick_access_bar.hpp
 	include/qfluentribbon/layout/collapse.hpp
 	include/qfluentribbon/qfluentribbon.hpp
 )
@@ -111,6 +113,10 @@ if(QFR_BUILD_TESTS)
 	add_executable(qfr_tests tests/test_collapse.cpp)
 	target_link_libraries(qfr_tests PRIVATE qfluentribbon Qt6::Test)
 	add_test(NAME qfr_tests COMMAND qfr_tests)
+
+	add_executable(qfr_qat_tests tests/test_qat_state.cpp)
+	target_link_libraries(qfr_qat_tests PRIVATE qfluentribbon Qt6::Test)
+	add_test(NAME qfr_qat_tests COMMAND qfr_qat_tests)
 endif()
 
 message(STATUS "QFluentRibbon ${PROJECT_VERSION}: library + examples=${QFR_BUILD_EXAMPLES} tests=${QFR_BUILD_TESTS}")

@@ -18,8 +18,8 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 
 ## 状态
 
-**M2 已落地**：简化模式、组启动器、ScreenTip-lite、缩略 `maxSize` 回归。  
-下一阶段 **M3**（QAT）见 [开发方案](docs/zh/dev-plan.md)。
+**M3 已落地**：`QuickAccessBar`（Tab 上方）、钉/卸钉、`QSettings` 持久化。  
+下一阶段 **M4**（Backstage）见 [开发方案](docs/zh/dev-plan.md)。
 
 ## 快速开始（Windows）
 

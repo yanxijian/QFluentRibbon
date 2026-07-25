@@ -12,10 +12,11 @@ class QTabBar;
 
 namespace qfluentribbon
 {
+	class QuickAccessBar;
 	class RibbonTab;
 	class ThemeBridge;
 
-	/// Classic ribbon chrome: tab strip + stacked RibbonTab panels (ThemeStore colors, no QSS).
+	/// Classic ribbon chrome: optional QAT + tab strip + stacked RibbonTab panels (ThemeStore colors, no QSS).
 	class RibbonBar final : public QWidget
 	{
 		Q_OBJECT
@@ -26,6 +27,11 @@ namespace qfluentribbon
 		[[nodiscard]] ThemeBridge* themeBridge() const
 		{
 			return m_bridge;
+		}
+
+		[[nodiscard]] QuickAccessBar* quickAccessBar() const
+		{
+			return m_qat;
 		}
 
 		[[nodiscard]] RibbonTab* addTab(const QString& title);
@@ -62,11 +68,13 @@ namespace qfluentribbon
 	private:
 		void rebuildChrome();
 		void syncBarHeightMetric();
+		[[nodiscard]] int qatRowHeight() const;
 		[[nodiscard]] int tabRowHeight() const;
 		[[nodiscard]] int panelHeight() const;
 		[[nodiscard]] int barHeight() const;
 
 		ThemeBridge* m_bridge = nullptr;
+		QuickAccessBar* m_qat = nullptr;
 		QTabBar* m_tabBar = nullptr;
 		QStackedWidget* m_stack = nullptr;
 		QList<RibbonTab*> m_tabs;

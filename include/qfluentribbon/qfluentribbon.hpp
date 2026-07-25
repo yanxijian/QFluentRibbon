@@ -2,6 +2,7 @@
 #define __QFR_QFLUENTRIBBON_H__
 
 #include "qfluentribbon/layout/collapse.hpp"
+#include "qfluentribbon/quick_access_bar.hpp"
 #include "qfluentribbon/ribbon_bar.hpp"
 #include "qfluentribbon/ribbon_group.hpp"
 #include "qfluentribbon/ribbon_tab.hpp"

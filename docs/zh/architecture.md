@@ -87,7 +87,9 @@
 | `ribbon/border.width` | metric | 1 |
 | `ribbon/icon.large` / `medium` / `small` | metric | 32 / 16 / 16 |
 | `ribbon/group.height.simplified` | metric | 40 |
+| `ribbon/qat.height` | metric | 26 |
 | `ribbon/bg` | color | ← `palette/window` |
+| `ribbon/qat.bg` | color | ← `palette/window` |
 | `ribbon/tab.row.bg` | color | ← `palette/window` |
 | `ribbon/panel.bg` | color | ← `palette/surface` |
 | `ribbon/border` | color | ← `palette/stroke` |

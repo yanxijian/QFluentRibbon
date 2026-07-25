@@ -109,8 +109,13 @@ namespace qfluentribbon
 		{
 			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40);
 		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
+		}
 		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"),
-						 store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
+						 store->metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26)
+							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
 							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88));
 
 		// Always refresh chrome colors from the active palette so light/dark/hc switches stay coherent.
@@ -133,6 +138,7 @@ namespace qfluentribbon
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.fg"), text);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.fg.secondary"), tertiary);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.border"), stroke);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("qat.bg"), window);
 
 		store->endUpdate();
 	}

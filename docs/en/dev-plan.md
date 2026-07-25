@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M2 simplified / launcher / ScreenTip)
+> **Updated**: 2026-07-25 (M3 Quick Access Bar)
 
 ## Goal
 
@@ -10,9 +10,9 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 
 ## Posture
 
-- **M2 done**: `setSimplified`, group dialog launcher, ScreenTip-lite, collapse `maxSize` + widen/narrow tests.
+- **M3 done**: `QuickAccessBar` above tabs; pin/unpin; `QSettings` persistence by action id.
 - Single visual SSOT: ThemeStore. No parallel QSS theme.
-- Next: **M3** Quick Access Bar.
+- Next: **M4** Backstage.
 
 ## Milestones (short)
 
