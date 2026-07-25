@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-25（M4：Backstage 覆盖面板）
+> **更新**：2026-07-25（M5：KeyTip + In-Ribbon Gallery）
 
 ---
 
@@ -14,18 +14,18 @@
 
 | 结论 | 说明 |
 |------|------|
-| **M4 已完成** | `Backstage` 覆盖中央区；左导航 + 页面栈；← / Esc 关闭 |
+| **M5 已完成** | Alt KeyTip（Tab/QAT/命令）；`RibbonGallery` 子集入组 |
 | **双依赖、单皮肤源** | 功能依赖 Qt Widgets + QTE；视觉 SSOT 只认 ThemeStore |
 | **参考而非端口** | Fluent.Ribbon 提供信息架构与行为清单；API 按 Qt/`QAction` 习惯设计 |
-| **下一刀：M5** | KeyTip / In-Ribbon Gallery |
+| **下一刀：M6** | HCI/DPI、`find_package`、可选 MPS 备忘 |
 
-### M4 出站核对
+### M5 出站核对
 
 | 项 | 状态 |
 |----|------|
-| 覆盖式 `Backstage` | `RibbonWindow::backstage()` |
-| 左导航 + New/Open/Info 占位页 | `addPage` |
-| 打开/关闭 | `open` / `dismiss`（Esc） |
+| Alt KeyTip 遍历 | `KeyTipService`（Esc 退出） |
+| In-Ribbon Gallery 子集 | `RibbonGallery` + `RibbonGroup::addWidget` |
+| Showcase | Home/Styles + Alt 提示 |
 
 ## 3. 原则（红线）
 

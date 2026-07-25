@@ -9,10 +9,11 @@ class QShowEvent;
 namespace qfluentribbon
 {
 	class Backstage;
+	class KeyTipService;
 	class RibbonBar;
 	class ThemeBridge;
 
-	/// QMainWindow with a north RibbonBar and an optional Backstage overlay over the central widget.
+	/// QMainWindow with a north RibbonBar, Backstage overlay, and Alt KeyTips.
 	class RibbonWindow : public QMainWindow
 	{
 		Q_OBJECT
@@ -29,6 +30,11 @@ namespace qfluentribbon
 			return m_backstage;
 		}
 
+		[[nodiscard]] KeyTipService* keyTipService() const
+		{
+			return m_keyTips;
+		}
+
 		/// Bind QTE engine bridge; seeds ribbon.* and repolishes chrome.
 		void setThemeBridge(ThemeBridge* bridge);
 
@@ -41,6 +47,7 @@ namespace qfluentribbon
 
 		RibbonBar* m_ribbon = nullptr;
 		Backstage* m_backstage = nullptr;
+		KeyTipService* m_keyTips = nullptr;
 	};
 } // namespace qfluentribbon
 

@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M4 Backstage)
+> **Updated**: 2026-07-25 (M5 KeyTip + Gallery)
 
 ## Goal
 
@@ -10,9 +10,9 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 
 ## Posture
 
-- **M4 done**: `Backstage` overlay with left nav + pages; Esc / ← dismiss.
+- **M5 done**: Alt KeyTips; `RibbonGallery` subset in groups.
 - Single visual SSOT: ThemeStore. No parallel QSS theme.
-- Next: **M5** KeyTips + In-Ribbon Gallery subset.
+- Next: **M6** HC/DPI, `find_package`, optional MPS notes.
 
 ## Milestones (short)
 

@@ -14,17 +14,23 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QStyle>
+#include <QTabBar>
 #include <QVBoxLayout>
 #include <QWidget>
 
 namespace
 {
-	QAction* makeAction(QWidget* parent, const QString& id, const QString& text, QStyle::StandardPixmap icon, const QString& tipBody)
+	QAction* makeAction(QWidget* parent, const QString& id, const QString& text, QStyle::StandardPixmap icon, const QString& tipBody,
+						const QString& keyTip = {})
 	{
 		auto* action = new QAction(text, parent);
 		action->setObjectName(id);
 		action->setIcon(parent->style()->standardIcon(icon));
 		qfluentribbon::ScreenTip::set(action, text, tipBody);
+		if (!keyTip.isEmpty())
+		{
+			qfluentribbon::KeyTip::set(action, keyTip);
+		}
 		return action;
 	}
 
@@ -54,8 +60,8 @@ int main(int argc, char** argv)
 	bridge.bind(&engine);
 
 	qfluentribbon::RibbonWindow window;
-	window.setWindowTitle(QStringLiteral("QFluentRibbon — M4 Gallery"));
-	window.resize(960, 640);
+	window.setWindowTitle(QStringLiteral("QFluentRibbon — M5 Gallery"));
+	window.resize(1024, 640);
 	window.setThemeBridge(&bridge);
 
 	auto* ribbon = window.ribbonBar();
@@ -89,31 +95,37 @@ int main(int argc, char** argv)
 	auto* home = ribbon->addTab(QStringLiteral("Home"));
 	auto* insert = ribbon->addTab(QStringLiteral("Insert"));
 	auto* view = ribbon->addTab(QStringLiteral("View"));
+	if (QTabBar* tabs = ribbon->tabBar())
+	{
+		tabs->setTabData(0, QStringLiteral("H"));
+		tabs->setTabData(1, QStringLiteral("N"));
+		tabs->setTabData(2, QStringLiteral("W"));
+	}
 
 	auto* paste = makeAction(&window, QStringLiteral("clipboard.paste"), QStringLiteral("Paste"), QStyle::SP_DialogOpenButton,
-							 QStringLiteral("Paste clipboard contents."));
+							 QStringLiteral("Paste clipboard contents."), QStringLiteral("V"));
 	auto* cut = makeAction(&window, QStringLiteral("clipboard.cut"), QStringLiteral("Cut"), QStyle::SP_DialogResetButton,
-						   QStringLiteral("Cut the selection to the clipboard."));
+						   QStringLiteral("Cut the selection to the clipboard."), QStringLiteral("X"));
 	auto* copy = makeAction(&window, QStringLiteral("clipboard.copy"), QStringLiteral("Copy"), QStyle::SP_FileDialogDetailedView,
-							QStringLiteral("Copy the selection."));
+							QStringLiteral("Copy the selection."), QStringLiteral("C"));
 	auto* bold = makeAction(&window, QStringLiteral("font.bold"), QStringLiteral("Bold"), QStyle::SP_DialogApplyButton,
-							QStringLiteral("Make text bold."));
+							QStringLiteral("Make text bold."), QStringLiteral("1"));
 	auto* italic = makeAction(&window, QStringLiteral("font.italic"), QStringLiteral("Italic"), QStyle::SP_DialogYesButton,
-							  QStringLiteral("Italicize text."));
+							  QStringLiteral("Italicize text."), QStringLiteral("2"));
 	auto* underline = makeAction(&window, QStringLiteral("font.underline"), QStringLiteral("Underline"), QStyle::SP_ArrowDown,
-								 QStringLiteral("Underline the selection."));
+								 QStringLiteral("Underline the selection."), QStringLiteral("3"));
 	auto* bullets = makeAction(&window, QStringLiteral("para.bullets"), QStringLiteral("Bullets"), QStyle::SP_BrowserReload,
-							   QStringLiteral("Start a bulleted list."));
+							   QStringLiteral("Start a bulleted list."), QStringLiteral("U"));
 	auto* align = makeAction(&window, QStringLiteral("para.align"), QStringLiteral("Align"), QStyle::SP_ArrowLeft,
-							 QStringLiteral("Change paragraph alignment."));
+							 QStringLiteral("Change paragraph alignment."), QStringLiteral("A"));
 	auto* table = makeAction(&window, QStringLiteral("insert.table"), QStringLiteral("Table"), QStyle::SP_FileDialogListView,
-							 QStringLiteral("Insert a table."));
+							 QStringLiteral("Insert a table."), QStringLiteral("T"));
 	auto* chart = makeAction(&window, QStringLiteral("insert.chart"), QStringLiteral("Chart"), QStyle::SP_FileDialogContentsView,
-							 QStringLiteral("Insert a chart."));
+							 QStringLiteral("Insert a chart."), QStringLiteral("C1"));
 	auto* grid = makeAction(&window, QStringLiteral("view.grid"), QStringLiteral("Grid"), QStyle::SP_ComputerIcon,
-							QStringLiteral("Toggle the grid."));
+							QStringLiteral("Toggle the grid."), QStringLiteral("G"));
 	auto* ruler = makeAction(&window, QStringLiteral("view.ruler"), QStringLiteral("Ruler"), QStyle::SP_DesktopIcon,
-							 QStringLiteral("Toggle the ruler."));
+							 QStringLiteral("Toggle the ruler."), QStringLiteral("R"));
 
 	auto* clipboard = home->addGroup(QStringLiteral("Clipboard"));
 	(void)clipboard->addAction(paste);
@@ -138,6 +150,20 @@ int main(int argc, char** argv)
 	(void)para->addAction(bullets);
 	(void)para->addAction(align);
 
+	auto* styles = home->addGroup(QStringLiteral("Styles"));
+	auto* gallery = new qfluentribbon::RibbonGallery(styles);
+	gallery->setThemeBridge(&bridge);
+	auto* styleNormal = makeAction(&window, QStringLiteral("style.normal"), QStringLiteral("Normal"), QStyle::SP_FileIcon,
+								   QStringLiteral("Apply Normal style."), QStringLiteral("SN"));
+	auto* styleTitle = makeAction(&window, QStringLiteral("style.title"), QStringLiteral("Title"), QStyle::SP_DesktopIcon,
+								  QStringLiteral("Apply Title style."), QStringLiteral("ST"));
+	auto* styleQuote = makeAction(&window, QStringLiteral("style.quote"), QStringLiteral("Quote"), QStyle::SP_MessageBoxInformation,
+								  QStringLiteral("Apply Quote style."), QStringLiteral("SQ"));
+	(void)gallery->addItem(QStringLiteral("Normal"), styleNormal->icon(), styleNormal);
+	(void)gallery->addItem(QStringLiteral("Title"), styleTitle->icon(), styleTitle);
+	(void)gallery->addItem(QStringLiteral("Quote"), styleQuote->icon(), styleQuote);
+	styles->addWidget(gallery);
+
 	auto* tables = insert->addGroup(QStringLiteral("Tables"));
 	(void)tables->addAction(table);
 	(void)tables->addAction(chart);
@@ -152,13 +178,21 @@ int main(int argc, char** argv)
 		catalog.insert(action->objectName(), action);
 	}
 
-	auto* status = new QLabel(QStringLiteral("Ready — QAT above tabs; right-click QAT to unpin"), &window);
+	auto* status = new QLabel(QStringLiteral("Ready — press Alt for KeyTips; Styles gallery on Home"), &window);
 	for (qfluentribbon::RibbonTab* tab : {home, insert, view})
 	{
 		for (qfluentribbon::RibbonGroup* group : tab->groups())
 		{
 			wireGroupActions(group, status);
 		}
+	}
+	for (QAction* styleAction : {styleNormal, styleTitle, styleQuote})
+	{
+		QObject::connect(styleAction, &QAction::triggered, status,
+						 [status, styleAction]()
+						 {
+							 status->setText(QStringLiteral("Gallery style: %1").arg(styleAction->text()));
+						 });
 	}
 
 	QSettings settings;
@@ -243,8 +277,8 @@ int main(int argc, char** argv)
 	QObject::connect(clearQat, &QPushButton::clicked, qat, &qfluentribbon::QuickAccessBar::clear);
 
 	auto* body = new QLabel(QStringLiteral("Content area\n\n"
-										   "M4: click File (Backstage) to open the overlay (New / Open / Info).\n"
-										   "Use ← or Esc to dismiss. QAT pin/unpin and Simplified still work."),
+										   "M5: press Alt to show KeyTips (Esc exits); type tip letters to activate.\n"
+										   "Home → Styles is an in-ribbon Gallery. File opens Backstage."),
 							central);
 	body->setAlignment(Qt::AlignCenter);
 	body->setWordWrap(true);

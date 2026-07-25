@@ -34,6 +34,11 @@ namespace qfluentribbon
 			return m_qat;
 		}
 
+		[[nodiscard]] QTabBar* tabBar() const
+		{
+			return m_tabBar;
+		}
+
 		[[nodiscard]] RibbonTab* addTab(const QString& title);
 		[[nodiscard]] RibbonTab* tabAt(int index) const;
 		[[nodiscard]] int tabCount() const;

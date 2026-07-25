@@ -1,4 +1,4 @@
-# Build (M4)
+# Build (M5)
 
 > **中文主文档**：[../zh/build.md](../zh/build.md)
 
@@ -13,4 +13,4 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-M4: File opens Backstage overlay (New / Open / Info); Esc or ← dismisses.
+M5: Alt KeyTips; Home Styles in-ribbon gallery.

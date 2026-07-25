@@ -1,6 +1,7 @@
 #include "qfluentribbon/ribbon_window.hpp"
 
 #include "qfluentribbon/backstage.hpp"
+#include "qfluentribbon/key_tip.hpp"
 #include "qfluentribbon/ribbon_bar.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
 
@@ -18,6 +19,8 @@ namespace qfluentribbon
 		m_backstage = new Backstage(this);
 		m_backstage->hide();
 		connect(m_backstage, &Backstage::opened, this, &RibbonWindow::syncBackstageGeometry);
+
+		m_keyTips = new KeyTipService(this);
 	}
 
 	void RibbonWindow::setThemeBridge(ThemeBridge* bridge)
@@ -53,7 +56,6 @@ namespace qfluentribbon
 		QWidget* content = centralWidget();
 		if (!content)
 		{
-			// Cover client area below the menu widget.
 			const int top = m_ribbon ? m_ribbon->height() : 0;
 			m_backstage->setGeometry(0, top, width(), qMax(1, height() - top));
 			return;

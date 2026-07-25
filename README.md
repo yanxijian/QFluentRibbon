@@ -18,8 +18,8 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 
 ## 状态
 
-**M4 已落地**：`Backstage` 覆盖面板（左导航 + New/Open/Info 占位页）。  
-下一阶段 **M5**（KeyTip / Gallery）见 [开发方案](docs/zh/dev-plan.md)。
+**M5 已落地**：Alt KeyTip、`RibbonGallery`（Styles 组）。  
+下一阶段 **M6**（打磨 / 导出）见 [开发方案](docs/zh/dev-plan.md)。
 
 ## 快速开始（Windows）
 

@@ -1,4 +1,4 @@
-# 构建说明（M4）
+# 构建说明（M5）
 
 > **English**：[../en/build.md](../en/build.md)
 
@@ -20,12 +20,12 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-## M4 验收
+## M5 验收
 
-1. Gallery 点 **File (Backstage)**：中央区出现覆盖面板。  
-2. 左侧切换 New / Open / Info；右侧内容随之切换。  
-3. ← 或 Esc 关闭 Backstage。  
-4. QAT / Simplified / Skin 仍可用。
+1. 按 **Alt** 显示 KeyTip 角标；输入字母激活 Tab/命令；**Esc** 退出。  
+2. Home → **Styles** 组内可见横向 Gallery（Normal / Title / Quote）。  
+3. 点击 Gallery 项触发对应 action。  
+4. 既有 QAT / Backstage / Simplified 仍可用。
 
 ## 相关
 

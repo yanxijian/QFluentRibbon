@@ -33,6 +33,8 @@ namespace qfluentribbon
 		void setThemeBridge(ThemeBridge* bridge);
 		[[nodiscard]] QAction* addAction(QAction* action);
 		[[nodiscard]] QAction* addAction(const QString& text);
+		/// Optional custom content (e.g. RibbonGallery) laid out after command buttons.
+		void addWidget(QWidget* widget);
 		[[nodiscard]] QList<QAction*> actions() const
 		{
 			return m_actions;
@@ -87,6 +89,7 @@ namespace qfluentribbon
 		bool m_simplified = false;
 		QList<QAction*> m_actions;
 		QList<QToolButton*> m_buttons;
+		QList<QWidget*> m_extraWidgets;
 		QAction* m_launcherAction = nullptr;
 		QToolButton* m_launcherButton = nullptr;
 	};

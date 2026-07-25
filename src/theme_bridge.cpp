@@ -117,6 +117,14 @@ namespace qfluentribbon
 		{
 			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width"), 180);
 		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.width")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.width"), 56);
+		}
+		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.height")))
+		{
+			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.height"), 64);
+		}
 		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"),
 						 store->metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26)
 							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
@@ -146,6 +154,8 @@ namespace qfluentribbon
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("backstage.bg"), surface);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.bg"), window);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("backstage.fg"), text);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("keytip.bg"), accent);
+		store->setColor(QStringLiteral("ribbon"), QStringLiteral("keytip.fg"), QColor(Qt::white));
 
 		store->endUpdate();
 	}

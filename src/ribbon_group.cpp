@@ -87,6 +87,19 @@ namespace qfluentribbon
 		return addAction(action);
 	}
 
+	void RibbonGroup::addWidget(QWidget* widget)
+	{
+		if (!widget || m_extraWidgets.contains(widget))
+		{
+			return;
+		}
+		widget->setParent(this);
+		m_extraWidgets.append(widget);
+		widget->show();
+		updateGeometry();
+		relayoutButtons();
+	}
+
 	void RibbonGroup::setItemSize(RibbonItemSize size)
 	{
 		if (m_simplified && size == RibbonItemSize::Large)
@@ -133,14 +146,25 @@ namespace qfluentribbon
 	{
 		layout::GroupWidthHints hints;
 		const int pad = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
-		const int n = qMax(1, m_actions.size());
+		const int n = qMax(0, m_actions.size());
 		const int launch = launcherReserve();
-		hints.large = pad * 2 + n * (iconPx(RibbonItemSize::Large) + 28) + launch;
-		hints.medium = pad * 2 + n * 72 + launch;
-		hints.small = pad * 2 + n * 36 + launch;
-		hints.large = qMax(hints.large, 64 + launch);
-		hints.medium = qMax(hints.medium, 48 + launch);
-		hints.small = qMax(hints.small, 36 + launch);
+		int extra = 0;
+		for (QWidget* w : m_extraWidgets)
+		{
+			extra += w->sizeHint().width() + 4;
+		}
+		if (n == 0 && extra == 0)
+		{
+			hints.large = hints.medium = hints.small = pad * 2 + 48 + launch;
+			return hints;
+		}
+		const int baseCount = qMax(1, n);
+		hints.large = pad * 2 + baseCount * (iconPx(RibbonItemSize::Large) + 28) + launch + extra;
+		hints.medium = pad * 2 + baseCount * 72 + launch + extra;
+		hints.small = pad * 2 + baseCount * 36 + launch + extra;
+		hints.large = qMax(hints.large, 64 + launch + extra);
+		hints.medium = qMax(hints.medium, 48 + launch + extra);
+		hints.small = qMax(hints.small, 36 + launch + extra);
 		return hints;
 	}
 
@@ -349,6 +373,16 @@ namespace qfluentribbon
 			const int y = (m_simplified ? 0 : pad) + (areaH - bh) / 2;
 			button->setGeometry(x, y, bw, bh);
 			x += bw + 4;
+		}
+
+		for (QWidget* extra : m_extraWidgets)
+		{
+			const QSize hint = extra->sizeHint();
+			const int ew = hint.width();
+			const int eh = qMin(areaH, hint.height());
+			const int y = (m_simplified ? 0 : pad) + (areaH - eh) / 2;
+			extra->setGeometry(x, y, ew, eh);
+			x += ew + 4;
 		}
 
 		if (m_launcherButton && m_launcherButton->isVisible())
