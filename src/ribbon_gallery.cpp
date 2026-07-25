@@ -1,4 +1,4 @@
-#include "qfluentribbon/ribbon_gallery.hpp"
+﻿#include "qfluentribbon/ribbon_gallery.hpp"
 
 #include "qfluentribbon/theme_bridge.hpp"
 #include "qtheme/api.hpp"
@@ -60,7 +60,7 @@ namespace qfluentribbon
 
 	void RibbonGallery::polishFromStore()
 	{
-		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
+		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
 		for (Item& item : m_items)
 		{
 			if (item.button)
@@ -78,7 +78,7 @@ namespace qfluentribbon
 		Q_UNUSED(event);
 		QPainter p(this);
 		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
-		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 		p.setPen(border);
 		p.drawRect(rect().adjusted(0, 0, -borderW, -borderW));
 	}
@@ -142,11 +142,11 @@ namespace qfluentribbon
 
 	int RibbonGallery::itemWidth() const
 	{
-		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.width"), 56);
+		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.width"), 56);
 	}
 
 	int RibbonGallery::itemHeight() const
 	{
-		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.height"), 64);
+		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.height"), 64);
 	}
 } // namespace qfluentribbon

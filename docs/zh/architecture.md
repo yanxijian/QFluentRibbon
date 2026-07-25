@@ -74,9 +74,11 @@
 - 壳层与专用自绘：**只**通过 ThemeStore / `qtheme::api` 取色与度量。
 - **禁止**对 Ribbon 壳 `setStyleSheet` 作为主题通道。
 
-### 5.2 `ribbon.*` 键（ThemeBridge 播种；M1 含图标度量）
+### 5.2 `ribbon.*` 键（Fluent Pack 度量 SSOT；ThemeBridge 派生色）
 
-**不**强制改 QTE Pack 文件：换肤后 `ThemeBridge::ensureRibbonTokens` 从 `palette.*` 派生色并写入 Store；度量缺省时播种。
+**度量**：优先由 QTE Fluent Pack（`fluent.shared.metrics.json` → `ribbon.*`）提供；`ThemeBridge` 仅在键缺失时播种。壳层几何通过 `qtheme::api::scaledMetric` 乘以 DPI 比例。
+
+**颜色**：换肤后 `ThemeBridge::ensureRibbonTokens` 仍从 `palette.*` 派生并写入 Store，保证 light/dark/hc 一致。
 
 | 角色 | 类型 | 默认 / 来源 |
 |------|------|-------------|
@@ -84,6 +86,8 @@
 | `ribbon/tab.height` | metric | 32 |
 | `ribbon/group.height` | metric | 88 |
 | `ribbon/group.padding` | metric | 6 |
+| `ribbon/group.titleHeight` | metric | 18 |
+| `ribbon/accent.underline` | metric | 3 |
 | `ribbon/border.width` | metric | 1 |
 | `ribbon/icon.large` / `medium` / `small` | metric | 32 / 16 / 16 |
 | `ribbon/group.height.simplified` | metric | 40 |
@@ -99,9 +103,9 @@
 | `ribbon/accent` | color | ← `palette/accent` |
 | `ribbon/screentip.bg` / `fg` / `fg.secondary` / `border` | color | ← panel / text / tertiary / stroke |
 | `ribbon/backstage.bg` / `nav.bg` / `fg` | color | ← surface / window / text |
-| `ribbon/keytip.bg` / `fg` | color | ← accent / white |
+| `ribbon/keytip.bg` / `fg` | color | ← accent / `palette/accent.text` |
 
-后续可将同名键合入 QTE Fluent Pack（SSOT 上收）；本库 Bridge 在键已存在时仍会在换肤时刷新派生色，保证与 palette 一致。
+后续可将同名色键也合入 Pack；本库 Bridge 在换肤时仍刷新派生色，保证与 palette 一致。壳层在 `Engine::dpiScaleChanged` 时重测几何。
 
 ### 5.3 换肤
 

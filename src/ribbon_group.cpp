@@ -1,4 +1,4 @@
-#include "qfluentribbon/ribbon_group.hpp"
+﻿#include "qfluentribbon/ribbon_group.hpp"
 
 #include "qfluentribbon/theme_bridge.hpp"
 #include "qtheme/api.hpp"
@@ -20,11 +20,11 @@ namespace qfluentribbon
 			switch (size)
 			{
 			case RibbonItemSize::Large:
-				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
+				return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
 			case RibbonItemSize::Medium:
-				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
+				return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
 			case RibbonItemSize::Small:
-				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+				return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 			}
 			return 16;
 		}
@@ -145,7 +145,7 @@ namespace qfluentribbon
 	layout::GroupWidthHints RibbonGroup::widthHints() const
 	{
 		layout::GroupWidthHints hints;
-		const int pad = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
+		const int pad = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		const int n = qMax(0, m_actions.size());
 		const int launch = launcherReserve();
 		int extra = 0;
@@ -218,7 +218,7 @@ namespace qfluentribbon
 		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
 		const QColor fg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
 		const int titleH = titleBandHeight();
-		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 
 		if (titleH > 0)
 		{
@@ -276,7 +276,7 @@ namespace qfluentribbon
 			m_launcherButton->setAutoRaise(true);
 			m_launcherButton->setFocusPolicy(Qt::TabFocus);
 			m_launcherButton->setToolButtonStyle(Qt::ToolButtonTextOnly);
-			m_launcherButton->setText(QStringLiteral("⌟"));
+			m_launcherButton->setText(QStringLiteral("\u231F"));
 			m_launcherButton->setToolTip(QStringLiteral("\u200B"));
 			connect(m_launcherButton, &QToolButton::clicked, this,
 					[this]()
@@ -289,7 +289,7 @@ namespace qfluentribbon
 					});
 		}
 		m_launcherButton->setDefaultAction(nullptr);
-		m_launcherButton->setText(QStringLiteral("⌟"));
+		m_launcherButton->setText(QStringLiteral("\u231F"));
 		m_launcherButton->setProperty("qfr.launcherAction", QVariant::fromValue(m_launcherAction));
 		m_launcherButton->setVisible(!m_simplified);
 		m_launcherButton->setEnabled(m_launcherAction->isEnabled());
@@ -328,25 +328,27 @@ namespace qfluentribbon
 		{
 			return 0;
 		}
-		return 18;
+		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.titleHeight"), 18);
 	}
 
 	int RibbonGroup::contentHeight() const
 	{
 		const QString key = m_simplified ? QStringLiteral("group.height.simplified") : QStringLiteral("group.height");
 		const int fallback = m_simplified ? 40 : 88;
-		const int groupH = qtheme::api::metric(QStringLiteral("ribbon"), key, fallback);
+		const int groupH = qtheme::api::scaledMetric(QStringLiteral("ribbon"), key, fallback);
 		return qMax(24, groupH - titleBandHeight());
 	}
 
 	int RibbonGroup::launcherReserve() const
 	{
-		return (m_launcherAction && !m_simplified) ? 16 : 0;
+		return (m_launcherAction && !m_simplified)
+				   ? qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16)
+				   : 0;
 	}
 
 	void RibbonGroup::relayoutButtons()
 	{
-		const int pad = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
+		const int pad = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		const int titleH = titleBandHeight();
 		const int areaH = qMax(1, height() - titleH - (m_simplified ? 0 : pad));
 		int x = pad;

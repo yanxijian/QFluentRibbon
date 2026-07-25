@@ -35,6 +35,7 @@ namespace qfluentribbon
 		void onSkinChanged(const QString& previous, const QString& current);
 		void onAccentChanged(const QColor& accent);
 		void onColorSchemeChanged();
+		void onDpiScaleChanged(qreal scale);
 
 	private:
 		void seedDefaults(qtheme::ThemeStore* store);

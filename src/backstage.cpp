@@ -1,4 +1,4 @@
-#include "qfluentribbon/backstage.hpp"
+﻿#include "qfluentribbon/backstage.hpp"
 
 #include "qfluentribbon/theme_bridge.hpp"
 #include "qtheme/api.hpp"
@@ -23,7 +23,7 @@ namespace qfluentribbon
 
 		m_backButton = new QToolButton(this);
 		m_backButton->setObjectName(QStringLiteral("qfr.Backstage.back"));
-		m_backButton->setText(QStringLiteral("←"));
+		m_backButton->setText(QStringLiteral("\u2190"));
 		m_backButton->setAutoRaise(true);
 		m_backButton->setToolTip(QStringLiteral("Back"));
 		connect(m_backButton, &QToolButton::clicked, this, &Backstage::dismiss);
@@ -193,7 +193,7 @@ namespace qfluentribbon
 							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
 		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
 		const int navW = navWidth();
-		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 
 		p.fillRect(rect(), bg);
 		p.fillRect(QRect(0, 0, navW, height()), navBg);
@@ -246,6 +246,6 @@ namespace qfluentribbon
 
 	int Backstage::navWidth() const
 	{
-		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width"), 180);
+		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width"), 180);
 	}
 } // namespace qfluentribbon

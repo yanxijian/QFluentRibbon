@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-25（M6：导出 / HCI·DPI 清单 / MPS 备忘）
+> **更新**：2026-07-26（`ribbon.*` Pack SSOT + DPI scaledMetric / ScreenTip 夹紧）
 
 ---
 
@@ -44,7 +44,7 @@
 |------|------|
 | CMake 工程、`find_package`/path 接入 QTE | Demo 能 `Engine::apply` + 切 skin |
 | 空 `RibbonWindow` + 占位 `RibbonBar` | 窗口内可见条带；切 light/dark 条带色变 |
-| `ribbon.*` 度量/色草案合入 QTE Pack 或 overlay | 键名文档化；Showcase 只读 Store |
+| `ribbon.*` 度量合入 QTE Fluent Pack；色由 Bridge 从 palette 派生 | 键名见 architecture §5.2；Showcase 只读 Store |
 | 文档：构建说明 stub | README 可按步骤跑通 |
 
 **出站标准**：换肤路径打通，尚无完整 Tab 交互也可。
@@ -102,11 +102,9 @@
 ## 5. 建议落地顺序（近两周）
 
 ```text
-M0 骨架 + QTE 换肤
-  → M1 Tab/Group/Action + 两档缩略 + Gallery
-    → （并行）QTE Pack 补 ribbon.* 键
-      → M2 简化模式
-        → 再排 QAT / Backstage
+M0–M6 已交付
+  → QTE Pack `ribbon.*` 度量 SSOT + QFR scaledMetric / ScreenTip 夹紧（本轮）
+    → 后续：QAT 从命令钉入、KeyTip 层级 Esc、按组级联缩略、Gallery 矢量图标
 ```
 
 ## 6. 明确暂不做

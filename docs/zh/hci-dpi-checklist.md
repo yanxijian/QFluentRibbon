@@ -21,11 +21,11 @@ Qt 6 默认高 DPI；勿再设过时的 `AA_EnableHighDpiScaling`。
 |------|----------|
 | QAT / Tab / 面板高度 | 各 DPI 下无裁切、无重叠 |
 | 组标题 / 分隔线 | 清晰；HC 下对比足够 |
-| Accent 下划线 | 对准当前 Tab，缩放后不「糊成一条」 |
+| Accent 下划线 | 对准当前 Tab；厚度走 `ribbon/accent.underline`×DPI |
 | Simplified | 切换后高度与按钮档位正确，无残影 |
 | Backstage | 覆盖中央区对齐；导航与内容可读 |
-| KeyTip 角标 | Alt 后位置贴控件；Esc 可退 |
-| ScreenTip | 悬停标题+说明完整，不被屏边裁掉过多 |
+| KeyTip 角标 | Alt 后位置贴控件（含 Gallery 嵌套按钮）；Esc 退出 |
+| ScreenTip | 悬停标题+说明完整；`availableGeometry` 夹紧，底边不足时上翻 |
 
 ## 3. 命令与 Gallery
 

@@ -243,7 +243,8 @@ namespace qfluentribbon
 		{
 			for (RibbonGroup* group : tab->groups())
 			{
-				for (QToolButton* button : group->findChildren<QToolButton*>(QString(), Qt::FindDirectChildrenOnly))
+				// Include nested gallery tool buttons (not only direct children).
+				for (QToolButton* button : group->findChildren<QToolButton*>())
 				{
 					if (!button->isVisible())
 					{

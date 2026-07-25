@@ -6,10 +6,12 @@
 #include <QApplication>
 #include <QEvent>
 #include <QFont>
+#include <QGuiApplication>
 #include <QHelpEvent>
 #include <QLabel>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QScreen>
 #include <QToolButton>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -20,6 +22,39 @@ namespace qfluentribbon
 	{
 		constexpr const char* kTitleProp = "qfr.screenTipTitle";
 		constexpr const char* kBodyProp = "qfr.screenTipBody";
+
+		QPoint clampTipPos(const QPoint& preferred, const QSize& tipSize, const QPoint& anchorGlobal)
+		{
+			QScreen* screen = QGuiApplication::screenAt(anchorGlobal);
+			if (!screen)
+			{
+				screen = QGuiApplication::primaryScreen();
+			}
+			if (!screen)
+			{
+				return preferred;
+			}
+			const QRect avail = screen->availableGeometry();
+			QRect tip(preferred, tipSize);
+			if (tip.right() > avail.right())
+			{
+				tip.moveRight(avail.right());
+			}
+			if (tip.left() < avail.left())
+			{
+				tip.moveLeft(avail.left());
+			}
+			if (tip.bottom() > avail.bottom())
+			{
+				// Flip above the cursor / control when the bottom edge would clip.
+				tip.moveBottom(qMin(preferred.y() - 8, avail.bottom()));
+			}
+			if (tip.top() < avail.top())
+			{
+				tip.moveTop(avail.top());
+			}
+			return tip.topLeft();
+		}
 
 		class TipPopup final : public QWidget
 		{
@@ -239,7 +274,8 @@ namespace qfluentribbon
 		}
 		auto* tip = static_cast<TipPopup*>(m_popup);
 		tip->setContent(tipTitle, tipBody);
-		tip->move(globalPos + QPoint(12, 16));
+		const QPoint preferred = globalPos + QPoint(12, 16);
+		tip->move(clampTipPos(preferred, tip->size(), globalPos));
 		tip->show();
 		tip->raise();
 	}

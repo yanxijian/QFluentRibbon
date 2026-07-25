@@ -1,4 +1,4 @@
-#include "qfluentribbon/quick_access_bar.hpp"
+﻿#include "qfluentribbon/quick_access_bar.hpp"
 
 #include "qfluentribbon/theme_bridge.hpp"
 #include "qtheme/api.hpp"
@@ -166,7 +166,7 @@ namespace qfluentribbon
 		setPalette(pal);
 		setAutoFillBackground(true);
 
-		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		for (QToolButton* button : m_buttons)
 		{
 			button->setIconSize(QSize(icon, icon));
@@ -184,7 +184,7 @@ namespace qfluentribbon
 			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("qat.bg"),
 							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
 		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
-		const int borderW = qMax(1, qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 		p.fillRect(rect(), bg);
 		p.fillRect(QRect(0, height() - borderW, width(), borderW), border);
 	}
@@ -226,7 +226,7 @@ namespace qfluentribbon
 		qDeleteAll(m_buttons);
 		m_buttons.clear();
 
-		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		for (QAction* action : m_actions)
 		{
 			auto* button = new QToolButton(this);
@@ -246,12 +246,14 @@ namespace qfluentribbon
 
 	void QuickAccessBar::relayoutButtons()
 	{
-		const int pad = 4;
+		const int pad = qMax(2, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) / 2);
 		const int h = qMax(1, height());
+		const int icon = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int sideCap = qMax(icon + 4, h - 2);
 		int x = pad;
 		for (QToolButton* button : m_buttons)
 		{
-			const int side = qMin(h - 2, 24);
+			const int side = qMin(h - 2, sideCap);
 			button->setGeometry(x, (h - side) / 2, side, side);
 			x += side + 2;
 		}
@@ -259,6 +261,6 @@ namespace qfluentribbon
 
 	int QuickAccessBar::barHeight() const
 	{
-		return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
+		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
 	}
 } // namespace qfluentribbon

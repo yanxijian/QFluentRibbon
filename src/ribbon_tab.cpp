@@ -1,4 +1,4 @@
-#include "qfluentribbon/ribbon_tab.hpp"
+﻿#include "qfluentribbon/ribbon_tab.hpp"
 
 #include "qfluentribbon/ribbon_group.hpp"
 #include "qfluentribbon/ribbon_types.hpp"
@@ -118,7 +118,7 @@ namespace qfluentribbon
 
 	void RibbonTab::relayout()
 	{
-		const int pad = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
+		const int pad = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		int x = pad;
 		const int y = 0;
 		const int h = qMax(1, height());
