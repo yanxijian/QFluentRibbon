@@ -223,8 +223,9 @@ namespace qfluentribbon
 		{
 			const QRect tabRect = m_tabBar->tabRect(idx).translated(m_tabBar->pos());
 			const int underlineH = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("accent.underline"), 3));
-			const int underlineW = qMax(qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16) + 8,
-										tabRect.width() - qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) * 2);
+			const int underlineW =
+				qMax(qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16) + 8,
+					 tabRect.width() - qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) * 2);
 			const int underlineX = tabRect.center().x() - underlineW / 2;
 			p.fillRect(QRect(underlineX, qatH + tabH - underlineH, underlineW, underlineH), accent);
 		}

@@ -341,9 +341,8 @@ namespace qfluentribbon
 
 	int RibbonGroup::launcherReserve() const
 	{
-		return (m_launcherAction && !m_simplified)
-				   ? qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16)
-				   : 0;
+		return (m_launcherAction && !m_simplified) ? qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16)
+												   : 0;
 	}
 
 	void RibbonGroup::relayoutButtons()

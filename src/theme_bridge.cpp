@@ -155,8 +155,7 @@ namespace qfluentribbon
 		const QColor accent = storeColor(store, QStringLiteral("palette"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
 		const QColor tertiary =
 			storeColor(store, QStringLiteral("palette"), QStringLiteral("text.tertiary"), QColor(QStringLiteral("#8D8D8D")));
-		const QColor accentText =
-			storeColor(store, QStringLiteral("palette"), QStringLiteral("accent.text"), QColor(Qt::white));
+		const QColor accentText = storeColor(store, QStringLiteral("palette"), QStringLiteral("accent.text"), QColor(Qt::white));
 
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("bg"), window);
 		store->setColor(QStringLiteral("ribbon"), QStringLiteral("tab.row.bg"), window);
