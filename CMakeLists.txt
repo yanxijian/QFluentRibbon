@@ -63,6 +63,7 @@ add_library(qfluentribbon
 	src/ribbon_window.cpp
 	src/screen_tip.cpp
 	src/quick_access_bar.cpp
+	src/backstage.cpp
 	src/layout/collapse.cpp
 	include/qfluentribbon/theme_bridge.hpp
 	include/qfluentribbon/ribbon_bar.hpp
@@ -72,6 +73,7 @@ add_library(qfluentribbon
 	include/qfluentribbon/ribbon_types.hpp
 	include/qfluentribbon/screen_tip.hpp
 	include/qfluentribbon/quick_access_bar.hpp
+	include/qfluentribbon/backstage.hpp
 	include/qfluentribbon/layout/collapse.hpp
 	include/qfluentribbon/qfluentribbon.hpp
 )

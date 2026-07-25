@@ -1,6 +1,7 @@
 #ifndef __QFR_QFLUENTRIBBON_H__
 #define __QFR_QFLUENTRIBBON_H__
 
+#include "qfluentribbon/backstage.hpp"
 #include "qfluentribbon/layout/collapse.hpp"
 #include "qfluentribbon/quick_access_bar.hpp"
 #include "qfluentribbon/ribbon_bar.hpp"

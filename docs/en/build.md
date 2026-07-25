@@ -1,4 +1,4 @@
-# Build (M3)
+# Build (M4)
 
 > **中文主文档**：[../zh/build.md](../zh/build.md)
 
@@ -13,4 +13,4 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-M3: Quick Access Toolbar above tabs; pin/unpin; QSettings restore on relaunch.
+M4: File opens Backstage overlay (New / Open / Info); Esc or ← dismisses.

@@ -88,6 +88,7 @@
 | `ribbon/icon.large` / `medium` / `small` | metric | 32 / 16 / 16 |
 | `ribbon/group.height.simplified` | metric | 40 |
 | `ribbon/qat.height` | metric | 26 |
+| `ribbon/backstage.nav.width` | metric | 180 |
 | `ribbon/bg` | color | ← `palette/window` |
 | `ribbon/qat.bg` | color | ← `palette/window` |
 | `ribbon/tab.row.bg` | color | ← `palette/window` |
@@ -96,6 +97,7 @@
 | `ribbon/fg` / `fg.secondary` | color | ← `palette/text` / `text.tertiary` |
 | `ribbon/accent` | color | ← `palette/accent` |
 | `ribbon/screentip.bg` / `fg` / `fg.secondary` / `border` | color | ← panel / text / tertiary / stroke |
+| `ribbon/backstage.bg` / `nav.bg` / `fg` | color | ← surface / window / text |
 
 后续可将同名键合入 QTE Fluent Pack（SSOT 上收）；本库 Bridge 在键已存在时仍会在换肤时刷新派生色，保证与 palette 一致。
 

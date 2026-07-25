@@ -54,12 +54,38 @@ int main(int argc, char** argv)
 	bridge.bind(&engine);
 
 	qfluentribbon::RibbonWindow window;
-	window.setWindowTitle(QStringLiteral("QFluentRibbon — M3 Gallery"));
+	window.setWindowTitle(QStringLiteral("QFluentRibbon — M4 Gallery"));
 	window.resize(960, 640);
 	window.setThemeBridge(&bridge);
 
 	auto* ribbon = window.ribbonBar();
 	auto* qat = ribbon->quickAccessBar();
+	auto* backstage = window.backstage();
+
+	auto makePage = [](const QString& headline, const QString& body) -> QWidget*
+	{
+		auto* page = new QWidget();
+		auto* layout = new QVBoxLayout(page);
+		layout->setContentsMargins(24, 24, 24, 24);
+		auto* title = new QLabel(headline, page);
+		QFont f = title->font();
+		f.setPointSize(f.pointSize() + 4);
+		f.setBold(true);
+		title->setFont(f);
+		auto* text = new QLabel(body, page);
+		text->setWordWrap(true);
+		layout->addWidget(title);
+		layout->addWidget(text);
+		layout->addStretch(1);
+		return page;
+	};
+	(void)backstage->addPage(QStringLiteral("New"),
+							 makePage(QStringLiteral("New"), QStringLiteral("Create a new document (placeholder).")));
+	(void)backstage->addPage(QStringLiteral("Open"),
+							 makePage(QStringLiteral("Open"), QStringLiteral("Open an existing file (placeholder).")));
+	(void)backstage->addPage(QStringLiteral("Info"),
+							 makePage(QStringLiteral("Info"), QStringLiteral("Document properties and account info (placeholder).")));
+
 	auto* home = ribbon->addTab(QStringLiteral("Home"));
 	auto* insert = ribbon->addTab(QStringLiteral("Insert"));
 	auto* view = ribbon->addTab(QStringLiteral("View"));
@@ -175,6 +201,8 @@ int main(int argc, char** argv)
 
 	auto* simplified = new QCheckBox(QStringLiteral("Simplified ribbon"), central);
 	row->addWidget(simplified);
+	auto* openBackstage = new QPushButton(QStringLiteral("File (Backstage)"), central);
+	row->addWidget(openBackstage);
 	root->addLayout(row);
 
 	auto* pinRow = new QHBoxLayout();
@@ -215,9 +243,8 @@ int main(int argc, char** argv)
 	QObject::connect(clearQat, &QPushButton::clicked, qat, &qfluentribbon::QuickAccessBar::clear);
 
 	auto* body = new QLabel(QStringLiteral("Content area\n\n"
-										   "M3: Quick Access Toolbar sits above the tabs.\n"
-										   "Pin via buttons below; right-click a QAT icon to remove.\n"
-										   "Pinned set is stored in QSettings and restored on next launch."),
+										   "M4: click File (Backstage) to open the overlay (New / Open / Info).\n"
+										   "Use ← or Esc to dismiss. QAT pin/unpin and Simplified still work."),
 							central);
 	body->setAlignment(Qt::AlignCenter);
 	body->setWordWrap(true);
@@ -244,6 +271,17 @@ int main(int argc, char** argv)
 						 syncCombo();
 					 });
 	QObject::connect(simplified, &QCheckBox::toggled, ribbon, &qfluentribbon::RibbonBar::setSimplified);
+	QObject::connect(openBackstage, &QPushButton::clicked, backstage, &qfluentribbon::Backstage::open);
+	QObject::connect(backstage, &qfluentribbon::Backstage::opened, status,
+					 [status]()
+					 {
+						 status->setText(QStringLiteral("Backstage open — Esc or ← to dismiss"));
+					 });
+	QObject::connect(backstage, &qfluentribbon::Backstage::closed, status,
+					 [status]()
+					 {
+						 status->setText(QStringLiteral("Backstage closed"));
+					 });
 
 	window.show();
 	const int rc = app.exec();

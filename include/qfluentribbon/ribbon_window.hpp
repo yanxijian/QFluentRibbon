@@ -3,12 +3,16 @@
 
 #include <QMainWindow>
 
+class QResizeEvent;
+class QShowEvent;
+
 namespace qfluentribbon
 {
+	class Backstage;
 	class RibbonBar;
 	class ThemeBridge;
 
-	/// QMainWindow with a north RibbonBar (via setMenuWidget). Skinning goes through ThemeBridge + QTE.
+	/// QMainWindow with a north RibbonBar and an optional Backstage overlay over the central widget.
 	class RibbonWindow : public QMainWindow
 	{
 		Q_OBJECT
@@ -20,11 +24,23 @@ namespace qfluentribbon
 			return m_ribbon;
 		}
 
-		/// Bind QTE engine bridge; seeds ribbon.* and repolishes the bar.
+		[[nodiscard]] Backstage* backstage() const
+		{
+			return m_backstage;
+		}
+
+		/// Bind QTE engine bridge; seeds ribbon.* and repolishes chrome.
 		void setThemeBridge(ThemeBridge* bridge);
 
+	protected:
+		void resizeEvent(QResizeEvent* event) override;
+		void showEvent(QShowEvent* event) override;
+
 	private:
+		void syncBackstageGeometry();
+
 		RibbonBar* m_ribbon = nullptr;
+		Backstage* m_backstage = nullptr;
 	};
 } // namespace qfluentribbon
 

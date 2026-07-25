@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M3 Quick Access Bar)
+> **Updated**: 2026-07-25 (M4 Backstage)
 
 ## Goal
 
@@ -10,9 +10,9 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 
 ## Posture
 
-- **M3 done**: `QuickAccessBar` above tabs; pin/unpin; `QSettings` persistence by action id.
+- **M4 done**: `Backstage` overlay with left nav + pages; Esc / ← dismiss.
 - Single visual SSOT: ThemeStore. No parallel QSS theme.
-- Next: **M4** Backstage.
+- Next: **M5** KeyTips + In-Ribbon Gallery subset.
 
 ## Milestones (short)
 

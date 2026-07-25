@@ -1,4 +1,4 @@
-# 构建说明（M3）
+# 构建说明（M4）
 
 > **English**：[../en/build.md](../en/build.md)
 
@@ -20,12 +20,12 @@ ctest --test-dir build --output-on-failure
 build\qfr_gallery.exe
 ```
 
-## M3 验收
+## M4 验收
 
-1. Gallery 顶部 Tab 上方可见 QAT 图标条（默认 Paste / Bold，或上次保存的集合）。  
-2. 用「Pin to QAT」钉上 Copy / Grid；右键 QAT 图标可卸钉。  
-3. 关闭再开 Gallery：钉住集合经 `QSettings` 恢复。  
-4. Skin / Simplified 仍可用。
+1. Gallery 点 **File (Backstage)**：中央区出现覆盖面板。  
+2. 左侧切换 New / Open / Info；右侧内容随之切换。  
+3. ← 或 Esc 关闭 Backstage。  
+4. QAT / Simplified / Skin 仍可用。
 
 ## 相关
 
