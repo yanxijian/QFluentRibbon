@@ -1,7 +1,7 @@
 ﻿#include "qfluentribbon/quick_access_bar.hpp"
 
+#include "qfluentribbon/ribbon_tokens.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
-#include "qtheme/api.hpp"
 
 #include <QAction>
 #include <QContextMenuEvent>
@@ -157,16 +157,16 @@ namespace qfluentribbon
 
 	void QuickAccessBar::polishFromStore()
 	{
-		const QColor bg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("qat.bg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
+		const QColor bg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("qat.bg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, bg);
 		pal.setColor(QPalette::Base, bg);
 		setPalette(pal);
 		setAutoFillBackground(true);
 
-		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		for (QToolButton* button : m_buttons)
 		{
 			button->setIconSize(QSize(icon, icon));
@@ -180,11 +180,11 @@ namespace qfluentribbon
 	{
 		Q_UNUSED(event);
 		QPainter p(this);
-		const QColor bg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("qat.bg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
-		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
-		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const QColor bg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("qat.bg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
+		const QColor border = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
+		const int borderW = qMax(1, qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 		p.fillRect(rect(), bg);
 		p.fillRect(QRect(0, height() - borderW, width(), borderW), border);
 	}
@@ -226,7 +226,7 @@ namespace qfluentribbon
 		qDeleteAll(m_buttons);
 		m_buttons.clear();
 
-		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		for (QAction* action : m_actions)
 		{
 			auto* button = new QToolButton(this);
@@ -246,9 +246,9 @@ namespace qfluentribbon
 
 	void QuickAccessBar::relayoutButtons()
 	{
-		const int pad = qMax(2, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) / 2);
+		const int pad = qMax(2, qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) / 2);
 		const int h = qMax(1, height());
-		const int icon = qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+		const int icon = qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 		const int sideCap = qMax(icon + 4, h - 2);
 		int x = pad;
 		for (QToolButton* button : m_buttons)
@@ -261,6 +261,6 @@ namespace qfluentribbon
 
 	int QuickAccessBar::barHeight() const
 	{
-		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
+		return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
 	}
 } // namespace qfluentribbon

@@ -1,10 +1,11 @@
-#ifndef __QFR_KEY_TIP_H__
+﻿#ifndef __QFR_KEY_TIP_H__
 #define __QFR_KEY_TIP_H__
 
 #include <QList>
 #include <QObject>
 #include <QSet>
 #include <QString>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QAction;
 class QEvent;
@@ -15,7 +16,7 @@ namespace qfluentribbon
 	class RibbonWindow;
 
 	/// Assign / read KeyTip sequences (stored on QObject properties).
-	class KeyTip final
+	class QFR_EXPORT KeyTip final
 	{
 	public:
 		static void set(QAction* action, const QString& tip);
@@ -25,7 +26,7 @@ namespace qfluentribbon
 	};
 
 	/// Alt KeyTip mode: badges on tabs / QAT / visible commands; type to activate; Esc exits.
-	class KeyTipService final : public QObject
+	class QFR_EXPORT KeyTipService final : public QObject
 	{
 		Q_OBJECT
 	public:

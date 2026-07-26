@@ -1,9 +1,9 @@
 ﻿#include "qfluentribbon/ribbon_tab.hpp"
 
 #include "qfluentribbon/ribbon_group.hpp"
+#include "qfluentribbon/ribbon_tokens.hpp"
 #include "qfluentribbon/ribbon_types.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
-#include "qtheme/api.hpp"
 
 #include <QResizeEvent>
 #include <QShowEvent>
@@ -90,7 +90,7 @@ namespace qfluentribbon
 
 	void RibbonTab::polishFromStore()
 	{
-		const QColor panel = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color());
+		const QColor panel = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color());
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, panel);
 		pal.setColor(QPalette::Base, panel);
@@ -118,7 +118,7 @@ namespace qfluentribbon
 
 	void RibbonTab::relayout()
 	{
-		const int pad = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
+		const int pad = qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		int x = pad;
 		const int y = 0;
 		const int h = qMax(1, height());

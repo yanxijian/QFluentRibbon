@@ -1,5 +1,7 @@
-#ifndef __QFR_RIBBON_TYPES_H__
+﻿#ifndef __QFR_RIBBON_TYPES_H__
 #define __QFR_RIBBON_TYPES_H__
+
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 namespace qfluentribbon
 {

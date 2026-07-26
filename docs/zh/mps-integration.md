@@ -22,7 +22,7 @@
 2. 将 Host 主窗改为 `RibbonWindow`，或把 `RibbonBar` 设为 `QMainWindow::setMenuWidget`。  
 3. 中央区仍放 MPS 的 Tab/嵌入容器；Backstage 覆盖中央区即可，不必进 Client。  
 4. 命令用 `QAction`：本进程动作直接槽；跨进程动作走现有 MPS IPC（不要把 IPC 塞进 QFR）。  
-5. 链接：`find_package(QThemeEngine)` + `find_package(QFluentRibbon)`，或源码旁路 `add_subdirectory`。
+5. 链接：应用层分别 `find_package(QThemeEngine)` / `find_package(QFluentRibbon)`。**不要**假设 QFR 会拉进 QTE（QFR 库本身独立）。
 
 ## 路径 B — Client 页 = frameless Ribbon（MPS Demo 已落地）
 
@@ -49,5 +49,5 @@ Demo 侧：`mps_demo_client` 每张嵌入页是无系统标题栏的 `RibbonWind
 |------|------|
 | 双主题通道 | 禁止壳层/页内私有 QSS 作为主题通道；只认 ThemeStore |
 | 焦点/嵌入 | Backstage / KeyTip 打开时注意勿抢对端焦点；嵌入态 KeyTip 可能被裁切 |
-| 安装依赖 | 包消费需已安装的 QThemeEngine；旁路源码时 sibling 布局即可 |
+| 安装依赖 | 默认走已安装 QThemeEngine；旁路源码需显式 `QFR_DEV_EMBED_QTE=ON` |
 | 嵌入后改 flags | 勿在 `SetParent` 后再改会重建 HWND 的 `windowFlags` |

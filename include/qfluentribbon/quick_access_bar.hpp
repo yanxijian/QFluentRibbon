@@ -1,4 +1,4 @@
-#ifndef __QFR_QUICK_ACCESS_BAR_H__
+﻿#ifndef __QFR_QUICK_ACCESS_BAR_H__
 #define __QFR_QUICK_ACCESS_BAR_H__
 
 #include <QHash>
@@ -6,6 +6,7 @@
 #include <QString>
 #include <QStringList>
 #include <QWidget>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QAction;
 class QContextMenuEvent;
@@ -20,7 +21,7 @@ namespace qfluentribbon
 
 	/// Compact icon strip of pinned QActions (Office Quick Access Toolbar).
 	/// Position for M3: above the tab row inside RibbonBar.
-	class QuickAccessBar final : public QWidget
+	class QFR_EXPORT QuickAccessBar final : public QWidget
 	{
 		Q_OBJECT
 	public:

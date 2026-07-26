@@ -1,9 +1,10 @@
-#ifndef __QFR_RIBBON_BAR_H__
+﻿#ifndef __QFR_RIBBON_BAR_H__
 #define __QFR_RIBBON_BAR_H__
 
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QPaintEvent;
 class QResizeEvent;
@@ -17,7 +18,7 @@ namespace qfluentribbon
 	class ThemeBridge;
 
 	/// Classic ribbon chrome: optional QAT + tab strip + stacked RibbonTab panels (ThemeStore colors, no QSS).
-	class RibbonBar final : public QWidget
+	class QFR_EXPORT RibbonBar final : public QWidget
 	{
 		Q_OBJECT
 	public:

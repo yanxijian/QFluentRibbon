@@ -1,8 +1,9 @@
-#ifndef __QFR_SCREEN_TIP_H__
+﻿#ifndef __QFR_SCREEN_TIP_H__
 #define __QFR_SCREEN_TIP_H__
 
 #include <QObject>
 #include <QString>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QAction;
 class QWidget;
@@ -10,7 +11,7 @@ class QWidget;
 namespace qfluentribbon
 {
 	/// Lightweight ScreenTip: title + description popup (ThemeStore colors, no QSS).
-	class ScreenTip final
+	class QFR_EXPORT ScreenTip final
 	{
 	public:
 		static void set(QAction* action, const QString& title, const QString& description);
@@ -21,7 +22,7 @@ namespace qfluentribbon
 		static void install(QWidget* host);
 	};
 
-	class ScreenTipFilter final : public QObject
+	class QFR_EXPORT ScreenTipFilter final : public QObject
 	{
 		Q_OBJECT
 	public:

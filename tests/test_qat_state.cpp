@@ -1,4 +1,4 @@
-#include "qfluentribbon/quick_access_bar.hpp"
+﻿#include "qfluentribbon/quick_access_bar.hpp"
 
 #include <QAction>
 #include <QHash>

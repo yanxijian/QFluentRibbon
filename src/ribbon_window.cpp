@@ -1,4 +1,4 @@
-#include "qfluentribbon/ribbon_window.hpp"
+﻿#include "qfluentribbon/ribbon_window.hpp"
 
 #include "qfluentribbon/backstage.hpp"
 #include "qfluentribbon/key_tip.hpp"

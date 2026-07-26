@@ -1,11 +1,11 @@
-#include "qfluentribbon/key_tip.hpp"
+﻿#include "qfluentribbon/key_tip.hpp"
 
 #include "qfluentribbon/quick_access_bar.hpp"
 #include "qfluentribbon/ribbon_bar.hpp"
 #include "qfluentribbon/ribbon_group.hpp"
 #include "qfluentribbon/ribbon_tab.hpp"
+#include "qfluentribbon/ribbon_tokens.hpp"
 #include "qfluentribbon/ribbon_window.hpp"
-#include "qtheme/api.hpp"
 
 #include <QAction>
 #include <QApplication>
@@ -35,10 +35,10 @@ namespace qfluentribbon
 
 			void polish()
 			{
-				const QColor bg = qtheme::api::color(
+				const QColor bg = qfluentribbon::tokens::color(
 					QStringLiteral("ribbon"), QStringLiteral("keytip.bg"),
-					qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4"))));
-				const QColor fg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("keytip.fg"), QColor(Qt::white));
+					qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4"))));
+				const QColor fg = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("keytip.fg"), QColor(Qt::white));
 				QPalette pal = palette();
 				pal.setColor(QPalette::Window, bg);
 				pal.setColor(QPalette::WindowText, fg);

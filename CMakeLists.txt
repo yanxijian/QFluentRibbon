@@ -11,57 +11,18 @@ if(MSVC)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
+option(QFR_BUILD_SHARED "Build qfluentribbon as a shared library" ON)
 option(QFR_BUILD_EXAMPLES "Build gallery example" ON)
 option(QFR_BUILD_TESTS "Build tests" OFF)
-# Default OFF so sibling ../QThemeEngine builds keep working; ON for package export (needs installed QTE).
-option(QFR_INSTALL "Install library, headers, and CMake package (requires imported QThemeEngine::engine)" OFF)
+option(QFR_INSTALL "Install library, headers, and CMake package" ON)
 
 include(GNUInstallDirs)
-
-# QTE: sibling path / -DQFR_QTE_SOURCE_DIR=... / find_package(QThemeEngine)
-set(QFR_QTE_SOURCE_DIR "" CACHE PATH "Path to QThemeEngine sources (optional; default ../QThemeEngine)")
-if(QFR_QTE_SOURCE_DIR STREQUAL "" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../QThemeEngine/CMakeLists.txt")
-	set(QFR_QTE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../QThemeEngine")
-endif()
+include(GenerateExportHeader)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-set(_qfr_have_qte_target FALSE)
-set(QFR_QTE_VIA_SOURCE FALSE)
-if(TARGET QThemeEngine::engine OR TARGET qtheme_engine)
-	set(_qfr_have_qte_target TRUE)
-elseif(QFR_QTE_SOURCE_DIR AND EXISTS "${QFR_QTE_SOURCE_DIR}/CMakeLists.txt")
-	set(QTE_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-	set(QTE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-	set(QTE_BUILD_WIDGETS OFF CACHE BOOL "" FORCE)
-	set(QTE_INSTALL OFF CACHE BOOL "" FORCE)
-	add_subdirectory("${QFR_QTE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/_deps/qthemeengine" EXCLUDE_FROM_ALL)
-	set(_qfr_have_qte_target TRUE)
-	set(QFR_QTE_VIA_SOURCE TRUE)
-	message(STATUS "QFluentRibbon: using QThemeEngine from ${QFR_QTE_SOURCE_DIR}")
-else()
-	find_package(QThemeEngine CONFIG QUIET)
-	if(TARGET QThemeEngine::engine)
-		set(_qfr_have_qte_target TRUE)
-		message(STATUS "QFluentRibbon: using installed QThemeEngine::engine")
-	endif()
-endif()
-
-if(NOT _qfr_have_qte_target)
-	message(FATAL_ERROR
-		"QThemeEngine not found. Options:\n"
-		"  - Place QThemeEngine next to this repo (../QThemeEngine)\n"
-		"  - Pass -DQFR_QTE_SOURCE_DIR=/path/to/QThemeEngine\n"
-		"  - Install QTE and pass -DCMAKE_PREFIX_PATH=...")
-endif()
-
-if(TARGET QThemeEngine::engine)
-	set(QFR_QTE_TARGET QThemeEngine::engine)
-else()
-	set(QFR_QTE_TARGET qtheme_engine)
-endif()
-
-add_library(qfluentribbon
+set(QFR_LIB_SOURCES
+	src/ribbon_tokens.cpp
 	src/theme_bridge.cpp
 	src/ribbon_bar.cpp
 	src/ribbon_tab.cpp
@@ -73,6 +34,7 @@ add_library(qfluentribbon
 	src/key_tip.cpp
 	src/ribbon_gallery.cpp
 	src/layout/collapse.cpp
+	include/qfluentribbon/ribbon_tokens.hpp
 	include/qfluentribbon/theme_bridge.hpp
 	include/qfluentribbon/ribbon_bar.hpp
 	include/qfluentribbon/ribbon_tab.hpp
@@ -87,29 +49,61 @@ add_library(qfluentribbon
 	include/qfluentribbon/layout/collapse.hpp
 	include/qfluentribbon/qfluentribbon.hpp
 )
+
+if(QFR_BUILD_SHARED)
+	add_library(qfluentribbon SHARED ${QFR_LIB_SOURCES})
+else()
+	add_library(qfluentribbon STATIC ${QFR_LIB_SOURCES})
+endif()
 add_library(QFluentRibbon::qfluentribbon ALIAS qfluentribbon)
+
+set(QFR_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/include")
+file(MAKE_DIRECTORY "${QFR_GENERATED_INCLUDE_DIR}/qfluentribbon")
+generate_export_header(qfluentribbon
+	BASE_NAME QFR
+	EXPORT_MACRO_NAME QFR_EXPORT
+	EXPORT_FILE_NAME "${QFR_GENERATED_INCLUDE_DIR}/qfluentribbon/qfluentribbon_export.hpp"
+)
 
 target_include_directories(qfluentribbon
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		$<INSTALL_INTERFACE:include>
+		$<BUILD_INTERFACE:${QFR_GENERATED_INCLUDE_DIR}>
+		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_link_libraries(qfluentribbon PUBLIC Qt6::Widgets ${QFR_QTE_TARGET})
+target_link_libraries(qfluentribbon PUBLIC Qt6::Widgets)
 
 set_target_properties(qfluentribbon PROPERTIES
 	OUTPUT_NAME qfluentribbon
 	EXPORT_NAME qfluentribbon
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	CXX_VISIBILITY_PRESET hidden
+	VISIBILITY_INLINES_HIDDEN ON
 )
 
 if(QFR_BUILD_EXAMPLES)
-	add_executable(qfr_gallery examples/gallery/main.cpp)
-	target_link_libraries(qfr_gallery PRIVATE qfluentribbon)
+	find_package(QThemeEngine CONFIG REQUIRED)
+	add_executable(qfr_gallery
+		examples/gallery/main.cpp
+		examples/gallery/qte_sync.cpp
+		examples/gallery/qte_sync.hpp
+	)
+	target_link_libraries(qfr_gallery PRIVATE qfluentribbon QThemeEngine::engine)
 	set_target_properties(qfr_gallery PROPERTIES WIN32_EXECUTABLE TRUE)
 	if(WIN32)
-		find_program(QFR_WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin")
+		find_program(QFR_WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin" "$ENV{QTDIR}/bin")
+		add_custom_command(TARGET qfr_gallery POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different
+					$<TARGET_FILE:qfluentribbon>
+					$<TARGET_FILE_DIR:qfr_gallery>
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different
+					$<TARGET_FILE:QThemeEngine::engine>
+					$<TARGET_FILE_DIR:qfr_gallery>
+			COMMENT "Copy qfluentribbon.dll + qtheme_engine.dll beside qfr_gallery"
+			VERBATIM
+		)
 		if(QFR_WINDEPLOYQT_EXECUTABLE)
 			add_custom_command(TARGET qfr_gallery POST_BUILD
 				COMMAND "${QFR_WINDEPLOYQT_EXECUTABLE}" --no-translations --compiler-runtime
@@ -133,18 +127,6 @@ if(QFR_BUILD_TESTS)
 endif()
 
 if(QFR_INSTALL)
-	# Exportable package requires installed QTE, not in-tree add_subdirectory.
-	if(QFR_QTE_VIA_SOURCE)
-		message(FATAL_ERROR
-			"QFR_INSTALL=ON is incompatible with in-tree QThemeEngine (QFR_QTE_SOURCE_DIR / ../QThemeEngine).\n"
-			"Install QTE first, clear QFR_QTE_SOURCE_DIR, configure with -DCMAKE_PREFIX_PATH=<qt>;<qte-prefix> -DQFR_INSTALL=ON.\n"
-			"Sibling day-to-day builds: leave QFR_INSTALL=OFF.")
-	endif()
-	if(NOT TARGET QThemeEngine::engine)
-		message(FATAL_ERROR
-			"QFR_INSTALL=ON requires find_package(QThemeEngine) providing QThemeEngine::engine.")
-	endif()
-
 	include(CMakePackageConfigHelpers)
 
 	install(TARGETS qfluentribbon
@@ -158,6 +140,9 @@ if(QFR_INSTALL)
 	install(DIRECTORY include/qfluentribbon
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 		FILES_MATCHING PATTERN "*.hpp"
+	)
+	install(FILES "${QFR_GENERATED_INCLUDE_DIR}/qfluentribbon/qfluentribbon_export.hpp"
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qfluentribbon
 	)
 
 	install(EXPORT QFluentRibbonTargets
@@ -185,4 +170,4 @@ if(QFR_INSTALL)
 	)
 endif()
 
-message(STATUS "QFluentRibbon ${PROJECT_VERSION}: library + examples=${QFR_BUILD_EXAMPLES} tests=${QFR_BUILD_TESTS} install=${QFR_INSTALL}")
+message(STATUS "QFluentRibbon ${PROJECT_VERSION}: shared=${QFR_BUILD_SHARED} examples=${QFR_BUILD_EXAMPLES} tests=${QFR_BUILD_TESTS} install=${QFR_INSTALL}")

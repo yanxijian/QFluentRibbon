@@ -1,7 +1,8 @@
-#ifndef __QFR_RIBBON_WINDOW_H__
+﻿#ifndef __QFR_RIBBON_WINDOW_H__
 #define __QFR_RIBBON_WINDOW_H__
 
 #include <QMainWindow>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QResizeEvent;
 class QShowEvent;
@@ -14,7 +15,7 @@ namespace qfluentribbon
 	class ThemeBridge;
 
 	/// QMainWindow with a north RibbonBar, Backstage overlay, and Alt KeyTips.
-	class RibbonWindow : public QMainWindow
+	class QFR_EXPORT RibbonWindow : public QMainWindow
 	{
 		Q_OBJECT
 	public:

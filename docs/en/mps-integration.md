@@ -9,4 +9,4 @@ Two parallel integration paths:
 
 **B — Client page (MPS Demo)：** Frameless `RibbonWindow` pages inside `mps_demo_client`; Host links **QTE** for shell chrome (not full QFR Ribbon) and embeds via HWND/`SetParent`. **Appearance SSOT is Host**: sync Light/Dark with bidirectional `Invoke("theme.set")` (`"light"` / `"dark"`); Host pushes the current scheme right after handshake. Details: MultiProcessShell `docs/zh/qfr-demo-client.md`.
 
-Do **not** bake MPS types or Host↔Client theme protocol into QFR (product/Demo owns `Invoke`). Package consumers need installed QThemeEngine + QFluentRibbon (`find_package`), or sibling source trees for day-to-day builds.
+Do **not** bake MPS types or Host↔Client theme protocol into QFR (product/Demo owns `Invoke`). Default: install QTE then `find_package(QThemeEngine)` + `find_package(QFluentRibbon)`. Sibling embed is opt-in only (`QFR_DEV_EMBED_QTE=ON`, incompatible with `QFR_INSTALL`).

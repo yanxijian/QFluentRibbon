@@ -1,4 +1,4 @@
-#include "qfluentribbon/layout/collapse.hpp"
+﻿#include "qfluentribbon/layout/collapse.hpp"
 
 #include <QtTest>
 

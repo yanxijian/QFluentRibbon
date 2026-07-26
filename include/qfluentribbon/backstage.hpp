@@ -1,9 +1,10 @@
-#ifndef __QFR_BACKSTAGE_H__
+﻿#ifndef __QFR_BACKSTAGE_H__
 #define __QFR_BACKSTAGE_H__
 
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QKeyEvent;
 class QListWidget;
@@ -18,7 +19,7 @@ namespace qfluentribbon
 	class ThemeBridge;
 
 	/// Full-content overlay with left navigation + stacked pages (Office Backstage-lite).
-	class Backstage final : public QWidget
+	class QFR_EXPORT Backstage final : public QWidget
 	{
 		Q_OBJECT
 	public:

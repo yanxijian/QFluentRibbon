@@ -1,12 +1,10 @@
-#include "qfluentribbon/ribbon_bar.hpp"
+﻿#include "qfluentribbon/ribbon_bar.hpp"
 
 #include "qfluentribbon/quick_access_bar.hpp"
 #include "qfluentribbon/ribbon_tab.hpp"
+#include "qfluentribbon/ribbon_tokens.hpp"
 #include "qfluentribbon/screen_tip.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
-#include "qtheme/api.hpp"
-#include "qtheme/engine.hpp"
-#include "qtheme/store.hpp"
 
 #include <QPaintEvent>
 #include <QPainter>
@@ -158,9 +156,9 @@ namespace qfluentribbon
 
 	void RibbonBar::polishFromStore()
 	{
-		const QColor bg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color());
-		const QColor panel = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color());
-		const QColor fg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg"), palette().windowText().color());
+		const QColor bg = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color());
+		const QColor panel = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color());
+		const QColor fg = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("fg"), palette().windowText().color());
 
 		QPalette barPal = palette();
 		barPal.setColor(QPalette::Window, bg);
@@ -208,10 +206,11 @@ namespace qfluentribbon
 	{
 		Q_UNUSED(event);
 		QPainter p(this);
-		const QColor bg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color());
-		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
-		const QColor accent = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
-		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const QColor bg = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color());
+		const QColor border = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
+		const QColor accent =
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
+		const int borderW = qMax(1, qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 		const int qatH = qatRowHeight();
 		const int tabH = tabRowHeight();
 
@@ -222,10 +221,11 @@ namespace qfluentribbon
 		if (idx >= 0 && m_tabBar)
 		{
 			const QRect tabRect = m_tabBar->tabRect(idx).translated(m_tabBar->pos());
-			const int underlineH = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("accent.underline"), 3));
-			const int underlineW =
-				qMax(qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16) + 8,
-					 tabRect.width() - qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) * 2);
+			const int underlineH =
+				qMax(1, qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("accent.underline"), 3));
+			const int underlineW = qMax(
+				qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16) + 8,
+				tabRect.width() - qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6) * 2);
 			const int underlineX = tabRect.center().x() - underlineW / 2;
 			p.fillRect(QRect(underlineX, qatH + tabH - underlineH, underlineW, underlineH), accent);
 		}
@@ -261,38 +261,30 @@ namespace qfluentribbon
 
 	void RibbonBar::syncBarHeightMetric()
 	{
-		if (!m_bridge || !m_bridge->engine() || !m_bridge->engine()->store())
-		{
-			return;
-		}
-		auto* store = m_bridge->engine()->store();
-		store->beginUpdate();
-		// Store logical (unscaled) bar height; chrome geometry uses scaledMetric.
-		const int logicalBar = store->metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26)
-							   + store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
-							   + (m_simplified ? store->metric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40)
-											   : store->metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88));
-		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), logicalBar);
-		store->endUpdate();
+		const int logicalBar = tokens::metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26)
+							   + tokens::metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
+							   + (m_simplified ? tokens::metric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40)
+											   : tokens::metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88));
+		tokens::setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"), logicalBar);
 	}
 
 	int RibbonBar::qatRowHeight() const
 	{
-		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
+		return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
 	}
 
 	int RibbonBar::tabRowHeight() const
 	{
-		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32);
+		return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32);
 	}
 
 	int RibbonBar::panelHeight() const
 	{
 		if (m_simplified)
 		{
-			return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40);
+			return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40);
 		}
-		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88);
+		return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88);
 	}
 
 	int RibbonBar::barHeight() const

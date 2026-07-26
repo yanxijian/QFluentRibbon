@@ -1,7 +1,7 @@
 ﻿#include "qfluentribbon/backstage.hpp"
 
+#include "qfluentribbon/ribbon_tokens.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
-#include "qtheme/api.hpp"
 
 #include <QKeyEvent>
 #include <QListWidget>
@@ -132,16 +132,17 @@ namespace qfluentribbon
 
 	void Backstage::polishFromStore()
 	{
-		const QColor bg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("backstage.bg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color()));
-		const QColor navBg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.bg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
-		const QColor fg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("backstage.fg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg"), palette().windowText().color()));
-		const QColor accent = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
+		const QColor bg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("backstage.bg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color()));
+		const QColor navBg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("backstage.nav.bg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
+		const QColor fg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("backstage.fg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("fg"), palette().windowText().color()));
+		const QColor accent =
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
 
 		QPalette hostPal = palette();
 		hostPal.setColor(QPalette::Window, bg);
@@ -185,15 +186,15 @@ namespace qfluentribbon
 	{
 		Q_UNUSED(event);
 		QPainter p(this);
-		const QColor bg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("backstage.bg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color()));
-		const QColor navBg =
-			qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.bg"),
-							   qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
-		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
+		const QColor bg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("backstage.bg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), palette().base().color()));
+		const QColor navBg = qfluentribbon::tokens::color(
+			QStringLiteral("ribbon"), QStringLiteral("backstage.nav.bg"),
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("bg"), palette().window().color()));
+		const QColor border = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
 		const int navW = navWidth();
-		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int borderW = qMax(1, qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 
 		p.fillRect(rect(), bg);
 		p.fillRect(QRect(0, 0, navW, height()), navBg);
@@ -246,6 +247,6 @@ namespace qfluentribbon
 
 	int Backstage::navWidth() const
 	{
-		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width"), 180);
+		return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width"), 180);
 	}
 } // namespace qfluentribbon

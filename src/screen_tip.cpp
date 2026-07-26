@@ -1,6 +1,6 @@
-#include "qfluentribbon/screen_tip.hpp"
+﻿#include "qfluentribbon/screen_tip.hpp"
 
-#include "qtheme/api.hpp"
+#include "qfluentribbon/ribbon_tokens.hpp"
 
 #include <QAction>
 #include <QApplication>
@@ -86,18 +86,19 @@ namespace qfluentribbon
 
 			void polish()
 			{
-				const QColor bg = qtheme::api::color(
+				const QColor bg = qfluentribbon::tokens::color(
 					QStringLiteral("ribbon"), QStringLiteral("screentip.bg"),
-					qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), QColor(QStringLiteral("#FFFFFF"))));
-				const QColor fg = qtheme::api::color(
+					qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), QColor(QStringLiteral("#FFFFFF"))));
+				const QColor fg = qfluentribbon::tokens::color(
 					QStringLiteral("ribbon"), QStringLiteral("screentip.fg"),
-					qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg"), QColor(QStringLiteral("#1A1A1A"))));
-				const QColor fgSec = qtheme::api::color(
-					QStringLiteral("ribbon"), QStringLiteral("screentip.fg.secondary"),
-					qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), QColor(QStringLiteral("#8D8D8D"))));
-				const QColor border = qtheme::api::color(
+					qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("fg"), QColor(QStringLiteral("#1A1A1A"))));
+				const QColor fgSec =
+					qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("screentip.fg.secondary"),
+												 qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"),
+																			  QColor(QStringLiteral("#8D8D8D"))));
+				const QColor border = qfluentribbon::tokens::color(
 					QStringLiteral("ribbon"), QStringLiteral("screentip.border"),
-					qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), QColor(QStringLiteral("#D1D1D1"))));
+					qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("border"), QColor(QStringLiteral("#D1D1D1"))));
 
 				QPalette pal = palette();
 				pal.setColor(QPalette::Window, bg);

@@ -1,4 +1,5 @@
-#include "qfluentribbon/qfluentribbon.hpp"
+﻿#include "qfluentribbon/qfluentribbon.hpp"
+#include "qte_sync.hpp"
 #include "qtheme/engine.hpp"
 #include "qtheme/types.hpp"
 
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
 	engine.apply(&app);
 
 	qfluentribbon::ThemeBridge bridge;
-	bridge.bind(&engine);
+	GalleryQteSync qteSync(&engine, &bridge);
 
 	qfluentribbon::RibbonWindow window;
 	window.setWindowTitle(QStringLiteral("QFluentRibbon — M5 Gallery"));

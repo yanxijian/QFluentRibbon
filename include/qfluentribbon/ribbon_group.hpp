@@ -1,4 +1,4 @@
-#ifndef __QFR_RIBBON_GROUP_H__
+﻿#ifndef __QFR_RIBBON_GROUP_H__
 #define __QFR_RIBBON_GROUP_H__
 
 #include "qfluentribbon/layout/collapse.hpp"
@@ -7,6 +7,7 @@
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QAction;
 class QPaintEvent;
@@ -18,7 +19,7 @@ namespace qfluentribbon
 	class ThemeBridge;
 
 	/// One labeled group of QAction-backed tool buttons (Large / Medium / Small).
-	class RibbonGroup final : public QWidget
+	class QFR_EXPORT RibbonGroup final : public QWidget
 	{
 		Q_OBJECT
 	public:

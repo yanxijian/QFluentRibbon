@@ -1,10 +1,11 @@
-#ifndef __QFR_RIBBON_GALLERY_H__
+﻿#ifndef __QFR_RIBBON_GALLERY_H__
 #define __QFR_RIBBON_GALLERY_H__
 
 #include <QIcon>
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QAction;
 class QPaintEvent;
@@ -16,7 +17,7 @@ namespace qfluentribbon
 	class ThemeBridge;
 
 	/// Compact in-ribbon gallery subset: horizontal icon+label items that trigger QActions.
-	class RibbonGallery final : public QWidget
+	class QFR_EXPORT RibbonGallery final : public QWidget
 	{
 		Q_OBJECT
 	public:

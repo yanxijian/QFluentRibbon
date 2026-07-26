@@ -1,180 +1,23 @@
-#include "qfluentribbon/theme_bridge.hpp"
+﻿#include "qfluentribbon/theme_bridge.hpp"
 
-#include "qtheme/api.hpp"
-#include "qtheme/engine.hpp"
-#include "qtheme/store.hpp"
-
-#include <QColor>
-#include <QString>
+#include "qfluentribbon/ribbon_tokens.hpp"
 
 namespace qfluentribbon
 {
-	namespace
-	{
-		QColor storeColor(const qtheme::ThemeStore* store, const QString& group, const QString& role, const QColor& fallback)
-		{
-			const qtheme::ColorValue cv = store->color(group, role, fallback);
-			return cv.ok ? cv.value : fallback;
-		}
-	} // namespace
-
 	ThemeBridge::ThemeBridge(QObject* parent)
 		: QObject(parent)
 	{
 	}
 
-	void ThemeBridge::bind(qtheme::Engine* engine)
+	void ThemeBridge::ensureRibbonTokens(const QColor& window, const QColor& surface, const QColor& stroke, const QColor& text,
+										 const QColor& accent, const QColor& tertiary, const QColor& accentText)
 	{
-		if (m_engine == engine)
-		{
-			return;
-		}
-		if (m_engine)
-		{
-			disconnect(m_engine, nullptr, this, nullptr);
-		}
-		m_engine = engine;
-		qtheme::api::bind(engine);
-		if (!m_engine)
-		{
-			return;
-		}
-		connect(m_engine, &qtheme::Engine::skinChanged, this, &ThemeBridge::onSkinChanged);
-		connect(m_engine, &qtheme::Engine::accentChanged, this, &ThemeBridge::onAccentChanged);
-		connect(m_engine, &qtheme::Engine::colorSchemeChanged, this, &ThemeBridge::onColorSchemeChanged);
-		connect(m_engine, &qtheme::Engine::dpiScaleChanged, this, &ThemeBridge::onDpiScaleChanged);
-		ensureRibbonTokens();
-	}
-
-	void ThemeBridge::ensureRibbonTokens()
-	{
-		if (!m_engine || !m_engine->store())
-		{
-			return;
-		}
-		seedDefaults(m_engine->store());
+		tokens::seedDefaults(window, surface, stroke, text, accent, tertiary, accentText);
 		emit ribbonTokensChanged();
 	}
 
-	void ThemeBridge::onSkinChanged(const QString& previous, const QString& current)
+	void ThemeBridge::notifyTokensChanged()
 	{
-		Q_UNUSED(previous);
-		Q_UNUSED(current);
-		ensureRibbonTokens();
-	}
-
-	void ThemeBridge::onAccentChanged(const QColor& accent)
-	{
-		Q_UNUSED(accent);
-		ensureRibbonTokens();
-	}
-
-	void ThemeBridge::onColorSchemeChanged()
-	{
-		ensureRibbonTokens();
-	}
-
-	void ThemeBridge::onDpiScaleChanged(qreal scale)
-	{
-		Q_UNUSED(scale);
-		// Pack metrics are logical; chrome re-reads via qtheme::api::scaledMetric.
 		emit ribbonTokensChanged();
-	}
-
-	void ThemeBridge::seedDefaults(qtheme::ThemeStore* store)
-	{
-		store->beginUpdate();
-
-		// Metrics: prefer Fluent pack SSOT; only fill gaps (legacy Bridge drafts).
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("tab.height")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("group.height")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("group.titleHeight")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("group.titleHeight"), 18);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("border.width")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("accent.underline")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("accent.underline"), 3);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("icon.large")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("group.height.simplified"), 40);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.width"), 180);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.width")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.width"), 56);
-		}
-		if (!store->hasMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.height")))
-		{
-			store->setMetric(QStringLiteral("ribbon"), QStringLiteral("gallery.item.height"), 64);
-		}
-		store->setMetric(QStringLiteral("ribbon"), QStringLiteral("bar.height"),
-						 store->metric(QStringLiteral("ribbon"), QStringLiteral("qat.height"), 26)
-							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("tab.height"), 32)
-							 + store->metric(QStringLiteral("ribbon"), QStringLiteral("group.height"), 88));
-
-		// Always refresh chrome colors from the active palette so light/dark/hc switches stay coherent.
-		const QColor window = storeColor(store, QStringLiteral("palette"), QStringLiteral("window"), QColor(QStringLiteral("#F3F3F3")));
-		const QColor surface = storeColor(store, QStringLiteral("palette"), QStringLiteral("surface"), QColor(QStringLiteral("#FFFFFF")));
-		const QColor stroke = storeColor(store, QStringLiteral("palette"), QStringLiteral("stroke"), QColor(QStringLiteral("#D1D1D1")));
-		const QColor text = storeColor(store, QStringLiteral("palette"), QStringLiteral("text"), QColor(QStringLiteral("#1A1A1A")));
-		const QColor accent = storeColor(store, QStringLiteral("palette"), QStringLiteral("accent"), QColor(QStringLiteral("#0078D4")));
-		const QColor tertiary =
-			storeColor(store, QStringLiteral("palette"), QStringLiteral("text.tertiary"), QColor(QStringLiteral("#8D8D8D")));
-		const QColor accentText = storeColor(store, QStringLiteral("palette"), QStringLiteral("accent.text"), QColor(Qt::white));
-
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("bg"), window);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("tab.row.bg"), window);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("panel.bg"), surface);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("border"), stroke);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("fg"), text);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), tertiary);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("accent"), accent);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.bg"), surface);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.fg"), text);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.fg.secondary"), tertiary);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("screentip.border"), stroke);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("qat.bg"), window);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("backstage.bg"), surface);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("backstage.nav.bg"), window);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("backstage.fg"), text);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("keytip.bg"), accent);
-		store->setColor(QStringLiteral("ribbon"), QStringLiteral("keytip.fg"), accentText);
-
-		store->endUpdate();
 	}
 } // namespace qfluentribbon

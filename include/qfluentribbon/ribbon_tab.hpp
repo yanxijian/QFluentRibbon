@@ -1,9 +1,10 @@
-#ifndef __QFR_RIBBON_TAB_H__
+﻿#ifndef __QFR_RIBBON_TAB_H__
 #define __QFR_RIBBON_TAB_H__
 
 #include <QList>
 #include <QString>
 #include <QWidget>
+#include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QResizeEvent;
 class QShowEvent;
@@ -14,7 +15,7 @@ namespace qfluentribbon
 	class ThemeBridge;
 
 	/// One ribbon page: horizontal row of RibbonGroup widgets.
-	class RibbonTab final : public QWidget
+	class QFR_EXPORT RibbonTab final : public QWidget
 	{
 		Q_OBJECT
 	public:

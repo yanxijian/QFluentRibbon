@@ -1,7 +1,7 @@
 ﻿#include "qfluentribbon/ribbon_group.hpp"
 
+#include "qfluentribbon/ribbon_tokens.hpp"
 #include "qfluentribbon/theme_bridge.hpp"
-#include "qtheme/api.hpp"
 
 #include <QAction>
 #include <QPaintEvent>
@@ -22,11 +22,11 @@ namespace qfluentribbon
 			switch (size)
 			{
 			case RibbonItemSize::Large:
-				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
+				return qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.large"), 32);
 			case RibbonItemSize::Medium:
-				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
+				return qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.medium"), 16);
 			case RibbonItemSize::Small:
-				return qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
+				return qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16);
 			}
 			return 16;
 		}
@@ -147,7 +147,7 @@ namespace qfluentribbon
 	layout::GroupWidthHints RibbonGroup::widthHints() const
 	{
 		layout::GroupWidthHints hints;
-		const int pad = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
+		const int pad = qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		const int n = qMax(0, m_actions.size());
 		const int launch = launcherReserve();
 		int extra = 0;
@@ -203,7 +203,7 @@ namespace qfluentribbon
 		if (m_launcherButton)
 		{
 			const QColor fg =
-				qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
+				qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
 			QPalette pal = m_launcherButton->palette();
 			pal.setColor(QPalette::ButtonText, fg);
 			m_launcherButton->setPalette(pal);
@@ -217,10 +217,11 @@ namespace qfluentribbon
 	{
 		Q_UNUSED(event);
 		QPainter p(this);
-		const QColor border = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
-		const QColor fg = qtheme::api::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
+		const QColor border = qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("border"), palette().mid().color());
+		const QColor fg =
+			qfluentribbon::tokens::color(QStringLiteral("ribbon"), QStringLiteral("fg.secondary"), palette().placeholderText().color());
 		const int titleH = titleBandHeight();
-		const int borderW = qMax(1, qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
+		const int borderW = qMax(1, qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("border.width"), 1));
 
 		if (titleH > 0)
 		{
@@ -330,25 +331,27 @@ namespace qfluentribbon
 		{
 			return 0;
 		}
-		return qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.titleHeight"), 18);
+		return qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.titleHeight"), 18);
 	}
 
 	int RibbonGroup::contentHeight() const
 	{
 		const QString key = m_simplified ? QStringLiteral("group.height.simplified") : QStringLiteral("group.height");
 		const int fallback = m_simplified ? 40 : 88;
-		const int groupH = qtheme::api::scaledMetric(QStringLiteral("ribbon"), key, fallback);
+		const int groupH = qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), key, fallback);
 		return qMax(24, groupH - titleBandHeight());
 	}
 
 	int RibbonGroup::launcherReserve() const
 	{
-		return (m_launcherAction && !m_simplified) ? qtheme::api::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16) : 0;
+		return (m_launcherAction && !m_simplified)
+				   ? qfluentribbon::tokens::metric(QStringLiteral("ribbon"), QStringLiteral("icon.small"), 16)
+				   : 0;
 	}
 
 	void RibbonGroup::relayoutButtons()
 	{
-		const int pad = qtheme::api::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
+		const int pad = qfluentribbon::tokens::scaledMetric(QStringLiteral("ribbon"), QStringLiteral("group.padding"), 6);
 		const int titleH = titleBandHeight();
 		const int areaH = qMax(1, height() - titleH - (m_simplified ? 0 : pad));
 		int x = pad;
