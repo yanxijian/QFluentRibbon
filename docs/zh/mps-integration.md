@@ -2,15 +2,15 @@
 
 > **English**：[../en/mps-integration.md](../en/mps-integration.md)  
 > **地位**：说明性备忘；**不**要求在本仓预埋 MPS 类型。  
-> **日期**：2026-07-26（增补 Client 嵌入路径）
+> **日期**：2026-07-26（全局外观 SSOT + Client 嵌入路径）
 
 ## 目标关系
 
 | 仓 | 角色 |
 |----|------|
 | QFluentRibbon | Ribbon 命令条（可在 **Host 壳** 或 **Client 页**） |
-| QThemeEngine | 皮肤 SSOT（使用方进程内 `Engine::apply`） |
-| MultiProcessShell | 多进程壳；嵌入 Client HWND |
+| QThemeEngine | 皮肤引擎（各进程 `Engine::apply`） |
+| MultiProcessShell | 多进程壳；嵌入 Client HWND；**Demo 外观 SSOT 在 Host** |
 
 有两条并列接入路径，按产品目标选其一（可并存于不同进程）。
 
@@ -26,12 +26,13 @@
 
 ## 路径 B — Client 页 = frameless Ribbon（MPS Demo 已落地）
 
-Demo 侧改造 `mps_demo_client`：每张嵌入页是无系统标题栏的 `RibbonWindow`，Host **不**链 QFR。
+Demo 侧：`mps_demo_client` 每张嵌入页是无系统标题栏的 `RibbonWindow`；Host 链 **QTE**（壳 chrome），**不**链完整 QFR Ribbon。
 
 1. Client：`Engine::apply` → `ThemeBridge::bind`。  
 2. 页构造：`Qt::FramelessWindowHint` + `WA_NativeWindow` → `show` → `winId` → `SubWindowAdded`。  
 3. Host 仍 `SetParent` / 剥 caption（既有 `EmbedContainer`）。  
-4. 不在 QFR 内引用 MPS 类型；皮肤不同步到 Host。
+4. 不在 QFR 内引用 MPS 类型。  
+5. **外观 SSOT 在 Host**：双向 `Invoke("theme.set")`（`"light"` / `"dark"`）同步 Host 壳与全部 Client；握手后 Host 立即推当前 scheme。
 
 细节与嵌入态限制（KeyTip / Backstage）见 MPS 仓 `docs/zh/qfr-demo-client.md`。
 
@@ -40,7 +41,7 @@ Demo 侧改造 `mps_demo_client`：每张嵌入页是无系统标题栏的 `Ribb
 ## 明确不做
 
 - 不在 QFR 内预埋 MPS 类型或 IPC。  
-- 不把皮肤状态经 MPS 同步 Host↔Client（各进程各自 `Engine::apply`）。  
+- 不在 QFR 内实现 Host↔Client 主题协议（由 MPS Demo / 产品层用现有 `Invoke` 承载）。
 
 ## 风险
 
