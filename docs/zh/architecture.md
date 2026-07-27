@@ -12,7 +12,7 @@
 
 1. **交互与结构**对齐业界成熟的 Ribbon 产品模型（参考 Fluent.Ribbon / MSDN Ribbon 指南）。
 2. **外观与换肤**统一交给 **QThemeEngine（QTE）**，与应用内其它控件共用同一 ThemeStore。
-3. 可被独立应用或后续 **MultiProcessShell** Host 集成，但不为集成做预重构。
+3. 可被独立桌面应用集成；不为特定宿主产品预重构。
 
 ## 2. 非目标
 

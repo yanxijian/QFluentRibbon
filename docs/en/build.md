@@ -4,20 +4,29 @@
 
 ## Dependencies
 
-Qt 6.8+ Widgets (+ Test); **installed** QThemeEngine on `CMAKE_PREFIX_PATH` by default.
+| Item | Notes |
+|------|--------|
+| Qt | 6.8+ Widgets (+ Test for unit tests) |
+| QThemeEngine | Required only when building the demo (`QFR_BUILD_EXAMPLES`); the `qfr_ribbon` library does **not** link QTE |
+| Toolchain | CMake 3.21+, Ninja; MSVC x64 on Windows |
 
 ```bat
 cmake -S . -B build -G Ninja ^
   -DCMAKE_PREFIX_PATH=%QTDIR%;D:\Codes\prefix ^
   -DCMAKE_INSTALL_PREFIX=D:\Codes\prefix ^
-  -DQFR_BUILD_SHARED=ON -DQFR_INSTALL=ON
+  -DQFR_BUILD_SHARED=ON -DQFR_INSTALL=ON -DQFR_BUILD_EXAMPLES=ON -DQFR_BUILD_TESTS=ON
 cmake --build build
 cmake --install build
-build\qfr_gallery.exe
+build\qfr_demo.exe
 ```
 
-Dev-only sibling embed: `-DQFR_DEV_EMBED_QTE=ON -DQFR_INSTALL=OFF` (incompatible with install).
+| Artifact | Name |
+|----------|------|
+| Shared library | `qfr_ribbon` |
+| Demo | `qfr_demo` |
+| Tests | `qfr_tests`, `qfr_qat_tests` |
+| Imported target | `QFluentRibbon::ribbon` |
 
-Consumers: `find_package(QFluentRibbon)` → `QFluentRibbon::qfluentribbon` (also pulls QThemeEngine). Runtime needs `qfluentribbon.dll` + `qtheme_engine.dll` beside the exe.
+Consumers: `find_package(QFluentRibbon)` → `QFluentRibbon::ribbon`. Runtime for the demo also needs `qte_engine` beside the exe.
 
-See also: [hci-dpi-checklist.md](hci-dpi-checklist.md) · [mps-integration.md](mps-integration.md).
+See also: [hci-dpi-checklist.md](hci-dpi-checklist.md).

@@ -20,18 +20,21 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 ## 状态
 
 **M0–M6 主线已落地**（Tab/Group、缩略、简化、ScreenTip、QAT、Backstage、KeyTip、Gallery、`find_package` 导出）。  
-HCI/DPI 抽测见 [检查清单](docs/zh/hci-dpi-checklist.md)；MPS 接入见 [备忘](docs/zh/mps-integration.md)。
+HCI/DPI 抽测见 [检查清单](docs/zh/hci-dpi-checklist.md)。
 
 ## 快速开始（Windows）
 
 ```bat
-:: vcvars x64，设置 QTDIR；默认使用同级 ../QThemeEngine
-cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=%QTDIR% -DQFR_BUILD_TESTS=ON
+:: vcvars x64；QTDIR + 已安装的 QThemeEngine（CMAKE_PREFIX_PATH）
+cmake -S . -B build -G Ninja ^
+  -DCMAKE_PREFIX_PATH=%QTDIR%;D:\Codes\prefix ^
+  -DQFR_BUILD_TESTS=ON
 cmake --build build
 ctest --test-dir build --output-on-failure
-build\qfr_gallery.exe
+build\qfr_demo.exe
 ```
 
+产物：动态库 `qfr_ribbon`，Demo `qfr_demo`，导入目标 `QFluentRibbon::ribbon`。  
 细节：[docs/zh/build.md](docs/zh/build.md)。
 
 ## 文档
@@ -42,7 +45,6 @@ build\qfr_gallery.exe
 | 开发方案 / 计划 | [dev-plan.md](docs/zh/dev-plan.md) | [dev-plan.md](docs/en/dev-plan.md) |
 | 构建 / 安装 | [build.md](docs/zh/build.md) | [build.md](docs/en/build.md) |
 | HCI / 高 DPI | [hci-dpi-checklist.md](docs/zh/hci-dpi-checklist.md) | [hci-dpi-checklist.md](docs/en/hci-dpi-checklist.md) |
-| MPS 接入备忘 | [mps-integration.md](docs/zh/mps-integration.md) | [mps-integration.md](docs/en/mps-integration.md) |
 
 日常以中文文档为准。
 
@@ -51,16 +53,16 @@ build\qfr_gallery.exe
 | 项 | 说明 |
 |----|------|
 | Qt | 6.8+ Widgets |
-| QTE | 默认 `../QThemeEngine`，或 `-DQFR_QTE_SOURCE_DIR=` / `find_package` |
+| QThemeEngine | 编 Demo（`QFR_BUILD_EXAMPLES`）时需已安装；本库 DLL **不**链接 QTE |
 | 工具链 | CMake 3.21+、Ninja；Windows 上 MSVC x64 |
 
 ## 仓库布局
 
 ```text
-include/qfluentribbon/   公共 API
+include/qfluentribbon/   公共 API（C++ 命名空间 qfluentribbon）
 src/                     实现（含 layout/collapse）
 cmake/                   安装用 Config 模板
-examples/gallery/        Showcase
+examples/gallery/        Demo（qfr_demo）
 tests/                   布局 / QAT 单测
 docs/zh|en/              中英文文档
 ```

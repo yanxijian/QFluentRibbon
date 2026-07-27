@@ -11,8 +11,8 @@ if(MSVC)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
-option(QFR_BUILD_SHARED "Build qfluentribbon as a shared library" ON)
-option(QFR_BUILD_EXAMPLES "Build gallery example" ON)
+option(QFR_BUILD_SHARED "Build qfr_ribbon as a shared library" ON)
+option(QFR_BUILD_EXAMPLES "Build demo application (qfr_demo)" ON)
 option(QFR_BUILD_TESTS "Build tests" OFF)
 option(QFR_INSTALL "Install library, headers, and CMake package" ON)
 
@@ -51,32 +51,32 @@ set(QFR_LIB_SOURCES
 )
 
 if(QFR_BUILD_SHARED)
-	add_library(qfluentribbon SHARED ${QFR_LIB_SOURCES})
+	add_library(qfr_ribbon SHARED ${QFR_LIB_SOURCES})
 else()
-	add_library(qfluentribbon STATIC ${QFR_LIB_SOURCES})
+	add_library(qfr_ribbon STATIC ${QFR_LIB_SOURCES})
 endif()
-add_library(QFluentRibbon::qfluentribbon ALIAS qfluentribbon)
+add_library(QFluentRibbon::ribbon ALIAS qfr_ribbon)
 
 set(QFR_GENERATED_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/include")
 file(MAKE_DIRECTORY "${QFR_GENERATED_INCLUDE_DIR}/qfluentribbon")
-generate_export_header(qfluentribbon
+generate_export_header(qfr_ribbon
 	BASE_NAME QFR
 	EXPORT_MACRO_NAME QFR_EXPORT
 	EXPORT_FILE_NAME "${QFR_GENERATED_INCLUDE_DIR}/qfluentribbon/qfluentribbon_export.hpp"
 )
 
-target_include_directories(qfluentribbon
+target_include_directories(qfr_ribbon
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		$<BUILD_INTERFACE:${QFR_GENERATED_INCLUDE_DIR}>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_link_libraries(qfluentribbon PUBLIC Qt6::Widgets)
+target_link_libraries(qfr_ribbon PUBLIC Qt6::Widgets)
 
-set_target_properties(qfluentribbon PROPERTIES
-	OUTPUT_NAME qfluentribbon
-	EXPORT_NAME qfluentribbon
+set_target_properties(qfr_ribbon PROPERTIES
+	OUTPUT_NAME qfr_ribbon
+	EXPORT_NAME ribbon
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	CXX_VISIBILITY_PRESET hidden
@@ -85,30 +85,30 @@ set_target_properties(qfluentribbon PROPERTIES
 
 if(QFR_BUILD_EXAMPLES)
 	find_package(QThemeEngine CONFIG REQUIRED)
-	add_executable(qfr_gallery
+	add_executable(qfr_demo
 		examples/gallery/main.cpp
 		examples/gallery/qte_sync.cpp
 		examples/gallery/qte_sync.hpp
 	)
-	target_link_libraries(qfr_gallery PRIVATE qfluentribbon QThemeEngine::engine)
-	set_target_properties(qfr_gallery PROPERTIES WIN32_EXECUTABLE TRUE)
+	target_link_libraries(qfr_demo PRIVATE qfr_ribbon QThemeEngine::engine)
+	set_target_properties(qfr_demo PROPERTIES WIN32_EXECUTABLE TRUE)
 	if(WIN32)
 		find_program(QFR_WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin" "$ENV{QTDIR}/bin")
-		add_custom_command(TARGET qfr_gallery POST_BUILD
+		add_custom_command(TARGET qfr_demo POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different
-					$<TARGET_FILE:qfluentribbon>
-					$<TARGET_FILE_DIR:qfr_gallery>
+					$<TARGET_FILE:qfr_ribbon>
+					$<TARGET_FILE_DIR:qfr_demo>
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different
 					$<TARGET_FILE:QThemeEngine::engine>
-					$<TARGET_FILE_DIR:qfr_gallery>
-			COMMENT "Copy qfluentribbon.dll + qtheme_engine.dll beside qfr_gallery"
+					$<TARGET_FILE_DIR:qfr_demo>
+			COMMENT "Copy qfr_ribbon.dll + qte_engine.dll beside qfr_demo"
 			VERBATIM
 		)
 		if(QFR_WINDEPLOYQT_EXECUTABLE)
-			add_custom_command(TARGET qfr_gallery POST_BUILD
+			add_custom_command(TARGET qfr_demo POST_BUILD
 				COMMAND "${QFR_WINDEPLOYQT_EXECUTABLE}" --no-translations --compiler-runtime
-					"$<TARGET_FILE:qfr_gallery>"
-				COMMENT "windeployqt: deploy Qt runtime beside qfr_gallery"
+					"$<TARGET_FILE:qfr_demo>"
+				COMMENT "windeployqt: deploy Qt runtime beside qfr_demo"
 			)
 		endif()
 	endif()
@@ -118,18 +118,30 @@ if(QFR_BUILD_TESTS)
 	find_package(Qt6 REQUIRED COMPONENTS Test)
 	enable_testing()
 	add_executable(qfr_tests tests/test_collapse.cpp)
-	target_link_libraries(qfr_tests PRIVATE qfluentribbon Qt6::Test)
+	target_link_libraries(qfr_tests PRIVATE qfr_ribbon Qt6::Test)
 	add_test(NAME qfr_tests COMMAND qfr_tests)
 
 	add_executable(qfr_qat_tests tests/test_qat_state.cpp)
-	target_link_libraries(qfr_qat_tests PRIVATE qfluentribbon Qt6::Test)
+	target_link_libraries(qfr_qat_tests PRIVATE qfr_ribbon Qt6::Test)
 	add_test(NAME qfr_qat_tests COMMAND qfr_qat_tests)
+
+	if(WIN32 AND QFR_BUILD_SHARED)
+		foreach(_qfr_test IN ITEMS qfr_tests qfr_qat_tests)
+			add_custom_command(TARGET ${_qfr_test} POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+						$<TARGET_FILE:qfr_ribbon>
+						$<TARGET_FILE_DIR:${_qfr_test}>
+				COMMENT "Copy qfr_ribbon.dll beside ${_qfr_test}"
+				VERBATIM
+			)
+		endforeach()
+	endif()
 endif()
 
 if(QFR_INSTALL)
 	include(CMakePackageConfigHelpers)
 
-	install(TARGETS qfluentribbon
+	install(TARGETS qfr_ribbon
 		EXPORT QFluentRibbonTargets
 		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

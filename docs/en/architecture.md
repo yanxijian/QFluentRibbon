@@ -10,7 +10,7 @@ Office-like Ribbon on **Qt Widgets**:
 
 - Structure/interaction inspired by Fluent.Ribbon / MSDN Ribbon guidance.
 - **Appearance & skinning owned by QTE** (shared ThemeStore with the rest of the app).
-- Integrable later into MultiProcessShell Host — no pre-refactor for that.
+- Suitable for standalone desktop apps — no pre-refactor for a specific host product.
 
 ## Non-goals
 

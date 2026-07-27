@@ -14,7 +14,7 @@
 
 | 结论 | 说明 |
 |------|------|
-| **M6 已完成** | `find_package(QFluentRibbon)` 安装导出；HCI/DPI 清单；MPS 接入备忘（不改 MPS） |
+| **M6 已完成** | `find_package(QFluentRibbon)` 安装导出；HCI/DPI 清单 |
 | **双依赖、单皮肤源** | 功能依赖 Qt Widgets + QTE；视觉 SSOT 只认 ThemeStore |
 | **参考而非端口** | Fluent.Ribbon 提供信息架构与行为清单；API 按 Qt/`QAction` 习惯设计 |
 | **里程碑** | M0–M6 主线交付齐；后续为打磨与真实产品接入 |
@@ -24,8 +24,7 @@
 | 项 | 状态 |
 |----|------|
 | HCI / 高 DPI 清单 | [hci-dpi-checklist.md](hci-dpi-checklist.md) |
-| `find_package(QFluentRibbon)` | `QFR_INSTALL` + Config/Targets |
-| MPS Host 接入备忘 | [mps-integration.md](mps-integration.md)（只文档） |
+| `find_package(QFluentRibbon)` | `QFR_INSTALL` + Config/Targets（`QFluentRibbon::ribbon`） |
 
 ## 3. 原则（红线）
 
@@ -33,7 +32,7 @@
 2. 专用自绘只读 **ThemeStore / `qtheme::api`**。  
 3. 组内命令控件**优先原生**（`QToolButton` / `QMenu` 等）吃 `QThemeStyle`。  
 4. 缩略 / 简化等规则尽量 **纯逻辑 + 单测**，再绑 Widgets。  
-5. **不为** MPS 集成预重构；集成当天再接。  
+5. 不为特定宿主产品预重构；集成当天再接。  
 6. 不把 Web Fluent tokens / 第三方 QML FluentUI 当 Windows 像素真源。
 
 ## 4. 里程碑
@@ -96,17 +95,15 @@
 | 交付 | 验收 |
 |------|------|
 | HCI / 高 DPI 检查清单 | 与 QTE hc pack 联调 |
-| `find_package(QFluentRibbon)` 安装导出 | 外部工程可链接 |
-| （可选）MPS Host 接入备忘 | 只写集成说明，不强制改 MPS |
+| `find_package(QFluentRibbon)` 安装导出 | 外部工程可链接 `QFluentRibbon::ribbon` |
 
 ## 5. 建议落地顺序（近两周）
 
 ```text
 M0–M6 已交付
-  → QTE Pack `ribbon.*` 度量 SSOT + QFR scaledMetric / ScreenTip 夹紧（本轮）
+  → QTE Pack `ribbon.*` 度量 SSOT + QFR scaledMetric / ScreenTip 夹紧
     → 后续：QAT 从命令钉入、KeyTip 层级 Esc、按组级联缩略、Gallery 矢量图标
 ```
-
 ## 6. 明确暂不做
 
 | 项 | 原因 |
@@ -130,9 +127,8 @@ M0–M6 已交付
 
 | 仓 | 关系 |
 |----|------|
-| [QThemeEngine](https://github.com/yanxijian/QThemeEngine) | **必须**：皮肤与度量 |
+| [QThemeEngine](https://github.com/yanxijian/QThemeEngine) | **必须**（Demo / 皮肤与度量） |
 | [Fluent.Ribbon](https://github.com/fluentribbon/Fluent.Ribbon)（只读参考） | 交互/IA 对照 |
-| [MultiProcessShell](https://github.com/yanxijian/MultiProcessShell) | 远期 Host 可选集成 |
 
 ## 9. 相关文档
 

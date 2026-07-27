@@ -3,7 +3,7 @@
 > **English**：[../en/hci-dpi-checklist.md](../en/hci-dpi-checklist.md)  
 > **联调对象**：[QThemeEngine](https://github.com/yanxijian/QThemeEngine) Fluent light / dark / **hc** pack。
 
-在改完 Ribbon 壳或度量后，按本清单在 **Windows + 真实 DPI** 上过一遍 Gallery（`qfr_gallery`）。
+在改完 Ribbon 壳或度量后，按本清单在 **Windows + 真实 DPI** 上过一遍 Gallery（`qfr_demo`）。
 
 ## 1. 环境矩阵
 
