@@ -1,5 +1,6 @@
 # QFluentRibbon
 
+[![CI](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml/badge.svg)](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 
 Office-like **Ribbon** for **Qt Widgets**, with **look & skinning driven by [QThemeEngine](https://github.com/yanxijian/QThemeEngine) (QTE)**.  
