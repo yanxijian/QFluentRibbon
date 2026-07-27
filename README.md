@@ -26,12 +26,14 @@ HCI/DPI 抽测见 [检查清单](docs/zh/hci-dpi-checklist.md)。
 
 ```bat
 :: vcvars x64；QTDIR + 已安装的 QThemeEngine（CMAKE_PREFIX_PATH）
-cmake -S . -B build -G Ninja ^
-  -DCMAKE_PREFIX_PATH=%QTDIR%;D:\Codes\prefix ^
-  -DQFR_BUILD_TESTS=ON
-cmake --build build
-ctest --test-dir build --output-on-failure
-build\qfr_demo.exe
+:: 本地共享库惯例：构建目录 build-shared；PREFIX 常为三仓同级的 prefix/
+set PREFIX=<install-prefix>
+cmake -S . -B build-shared -G Ninja ^
+  -DCMAKE_PREFIX_PATH=%QTDIR%;%PREFIX% ^
+  -DQFR_BUILD_SHARED=ON -DQFR_BUILD_TESTS=ON
+cmake --build build-shared
+ctest --test-dir build-shared --output-on-failure
+build-shared\qfr_demo.exe
 ```
 
 产物：动态库 `qfr_ribbon`，Demo `qfr_demo`，导入目标 `QFluentRibbon::ribbon`。  

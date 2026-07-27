@@ -10,14 +10,18 @@
 | QThemeEngine | Required only when building the demo (`QFR_BUILD_EXAMPLES`); the `qfr_ribbon` library does **not** link QTE |
 | Toolchain | CMake 3.21+, Ninja; MSVC x64 on Windows |
 
+Local shared-library convention uses **`build-shared`**. Point `CMAKE_PREFIX_PATH` at an installed QTE (`qte_engine`).
+
 ```bat
-cmake -S . -B build -G Ninja ^
-  -DCMAKE_PREFIX_PATH=%QTDIR%;D:\Codes\prefix ^
-  -DCMAKE_INSTALL_PREFIX=D:\Codes\prefix ^
+:: PREFIX = install root (often sibling prefix/ of the three repos); QTE must already be installed
+set PREFIX=<install-prefix>
+cmake -S . -B build-shared -G Ninja ^
+  -DCMAKE_PREFIX_PATH=%QTDIR%;%PREFIX% ^
+  -DCMAKE_INSTALL_PREFIX=%PREFIX% ^
   -DQFR_BUILD_SHARED=ON -DQFR_INSTALL=ON -DQFR_BUILD_EXAMPLES=ON -DQFR_BUILD_TESTS=ON
-cmake --build build
-cmake --install build
-build\qfr_demo.exe
+cmake --build build-shared
+cmake --install build-shared
+build-shared\qfr_demo.exe
 ```
 
 | Artifact | Name |

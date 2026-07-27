@@ -12,14 +12,18 @@
 
 ## 推荐：本地 prefix
 
+本地共享库惯例使用构建目录 **`build-shared`**。通过 `CMAKE_PREFIX_PATH` 找已安装的 QTE（`qte_engine`）。
+
 ```bat
-cmake -S . -B build -G Ninja ^
-  -DCMAKE_PREFIX_PATH=%QTDIR%;D:\Codes\prefix ^
-  -DCMAKE_INSTALL_PREFIX=D:\Codes\prefix ^
+:: PREFIX = 安装根（常与三仓同级的 prefix/）；需已安装 QTE
+set PREFIX=<install-prefix>
+cmake -S . -B build-shared -G Ninja ^
+  -DCMAKE_PREFIX_PATH=%QTDIR%;%PREFIX% ^
+  -DCMAKE_INSTALL_PREFIX=%PREFIX% ^
   -DQFR_BUILD_SHARED=ON -DQFR_INSTALL=ON -DQFR_BUILD_EXAMPLES=ON -DQFR_BUILD_TESTS=ON
-cmake --build build
-cmake --install build
-build\qfr_demo.exe
+cmake --build build-shared
+cmake --install build-shared
+build-shared\qfr_demo.exe
 ```
 
 Demo 通过 `find_package(QThemeEngine)` PRIVATE 链接；运行时旁路 `qfr_ribbon.dll` 与 `qte_engine.dll`。
