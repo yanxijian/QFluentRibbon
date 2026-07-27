@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: qfr-ci-${{ github.workflow }}-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  format:
+    name: clang-format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install clang-format 20
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "clang-format==20.1.8"
+          clang-format --version
+      - name: Check formatting
+        run: python scripts/format_source.py --check
+
+  windows-qt:
+    name: Windows MSVC + Qt (tests + gallery)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout QFluentRibbon
+        uses: actions/checkout@v7
+        with:
+          path: QFluentRibbon
+      - name: Checkout QThemeEngine (sibling for gallery)
+        uses: actions/checkout@v7
+        with:
+          repository: yanxijian/QThemeEngine
+          path: QThemeEngine
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - uses: seanmiddleditch/gha-setup-ninja@v6
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          cache: true
+          arch: win64_msvc2022_64
+      - name: Build and install QThemeEngine
+        shell: cmd
+        run: |
+          cmake -S QThemeEngine -B QThemeEngine\build -G Ninja ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_PREFIX_PATH=%QT_ROOT_DIR% ^
+            -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\prefix ^
+            -DQTE_BUILD_TESTS=OFF ^
+            -DQTE_BUILD_EXAMPLES=OFF ^
+            -DQTE_BUILD_WIDGETS=OFF
+          cmake --build QThemeEngine\build --config Release
+          cmake --install QThemeEngine\build
+      - name: Configure QFluentRibbon
+        working-directory: QFluentRibbon
+        shell: cmd
+        run: |
+          cmake -S . -B build -G Ninja ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_PREFIX_PATH=%QT_ROOT_DIR%;%GITHUB_WORKSPACE%\prefix ^
+            -DQFR_BUILD_SHARED=ON ^
+            -DQFR_BUILD_TESTS=ON ^
+            -DQFR_BUILD_EXAMPLES=ON ^
+            -DQFR_INSTALL=OFF
+      - name: Build
+        working-directory: QFluentRibbon
+        shell: cmd
+        run: cmake --build build --config Release
+      - name: Test
+        working-directory: QFluentRibbon
+        shell: cmd
+        run: |
+          set PATH=%QT_ROOT_DIR%\bin;%PATH%
+          ctest --test-dir build --output-on-failure --no-tests=error
+
+  ubuntu-qt:
+    name: Ubuntu + Qt (tests + gallery)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout QFluentRibbon
+        uses: actions/checkout@v7
+        with:
+          path: QFluentRibbon
+      - name: Checkout QThemeEngine (sibling for gallery)
+        uses: actions/checkout@v7
+        with:
+          repository: yanxijian/QThemeEngine
+          path: QThemeEngine
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build libgl1-mesa-dev
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          cache: true
+          host: linux
+          target: desktop
+          arch: linux_gcc_64
+      - name: Build and install QThemeEngine
+        run: |
+          cmake -S QThemeEngine -B QThemeEngine/build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="${QT_ROOT_DIR}" \
+            -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/prefix" \
+            -DQTE_BUILD_TESTS=OFF \
+            -DQTE_BUILD_EXAMPLES=OFF \
+            -DQTE_BUILD_WIDGETS=OFF
+          cmake --build QThemeEngine/build --config Release
+          cmake --install QThemeEngine/build
+      - name: Configure QFluentRibbon
+        working-directory: QFluentRibbon
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="${QT_ROOT_DIR};${GITHUB_WORKSPACE}/prefix" \
+            -DQFR_BUILD_SHARED=ON \
+            -DQFR_BUILD_TESTS=ON \
+            -DQFR_BUILD_EXAMPLES=ON \
+            -DQFR_INSTALL=OFF
+      - name: Build
+        working-directory: QFluentRibbon
+        run: cmake --build build --config Release
+      - name: Test
+        working-directory: QFluentRibbon
+        run: |
+          export PATH="${QT_ROOT_DIR}/bin:${PATH}"
+          export QT_QPA_PLATFORM=offscreen
+          ctest --test-dir build --output-on-failure --no-tests=error
