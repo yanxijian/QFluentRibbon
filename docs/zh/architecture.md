@@ -116,7 +116,7 @@ qtheme::Engine engine;
 engine.apply(&app);
 // …
 ribbon->polishFromStore(); // 或监听 Store generation / Engine 信号刷新壳
-engine.switchSkin(QStringLiteral("dark"));
+engine.switchPack(QString::fromUtf8(qtheme::kPackFluentDark));
 ```
 
 本库提供明确的「Store 变更 → 壳重测/重绘」路径，避免各控件私自缓存过期色。

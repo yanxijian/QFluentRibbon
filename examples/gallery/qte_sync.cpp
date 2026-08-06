@@ -17,7 +17,7 @@ GalleryQteSync::GalleryQteSync(qtheme::Engine* engine, qfluentribbon::ThemeBridg
 	{
 		return;
 	}
-	connect(m_engine, &qtheme::Engine::skinChanged, this, &GalleryQteSync::syncFromEngine);
+	connect(m_engine, &qtheme::Engine::packChanged, this, &GalleryQteSync::syncFromEngine);
 	connect(m_engine, &qtheme::Engine::accentChanged, this, &GalleryQteSync::syncFromEngine);
 	connect(m_engine, &qtheme::Engine::colorSchemeChanged, this, &GalleryQteSync::syncFromEngine);
 	connect(m_engine, &qtheme::Engine::dpiScaleChanged, this, &GalleryQteSync::syncFromEngine);
