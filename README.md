@@ -28,14 +28,14 @@ Qt Widgets 上的 **Office-like Ribbon** 框架；**外观与换肤由 [QThemeEn
 | 项 | 说明 |
 |----|------|
 | Qt | **6.8+** Widgets |
-| QThemeEngine | 编 Demo（`QFR_BUILD_EXAMPLES`）时需已安装；本库 DLL **不**链接 QTE |
+| [QThemeEngine](https://github.com/yanxijian/QThemeEngine) | 编 Demo（`QFR_BUILD_EXAMPLES`）时需已安装；本库 DLL **不**链接 QTE |
 | 工具链 | CMake 3.21+、Ninja；Windows 上 MSVC x64（`vcvars`） |
 | 可选 | `clang-format` 20（本地格式检查） |
 
 ## 快速开始（Windows）
 
 1. 打开 **x64 Native Tools / vcvars** 环境，并设置 `QTDIR`。  
-2. 确保本地 prefix 已安装 QThemeEngine（或先跑 MPS 的 `install_stack.py`）。  
+2. 确保本地 prefix 已安装 [QThemeEngine](https://github.com/yanxijian/QThemeEngine)（或先跑 [MultiProcessShell](https://github.com/yanxijian/MultiProcessShell) 的 `install_stack.py`）。  
 3. 配置并构建（共享库惯例目录 **`build-shared`**）：
 
 ```bat

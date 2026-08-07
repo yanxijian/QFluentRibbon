@@ -28,11 +28,13 @@ Layering:
 | Item | Notes |
 |------|--------|
 | Qt | **6.8+** Widgets |
-| QThemeEngine | Required when building the demo (`QFR_BUILD_EXAMPLES`); library DLL does **not** link QTE |
+| [QThemeEngine](https://github.com/yanxijian/QThemeEngine) | Required when building the demo (`QFR_BUILD_EXAMPLES`); library DLL does **not** link QTE |
 | Toolchain | CMake 3.21+, Ninja; MSVC x64 (`vcvars`) on Windows |
 | Optional | `clang-format` 20 for local format checks |
 
 ## Quick start (Windows)
+
+Install [QThemeEngine](https://github.com/yanxijian/QThemeEngine) into `PREFIX` first (or run [MultiProcessShell](https://github.com/yanxijian/MultiProcessShell) `install_stack.py`).
 
 ```bat
 :: vcvars x64; QTDIR set; QThemeEngine already installed into PREFIX
