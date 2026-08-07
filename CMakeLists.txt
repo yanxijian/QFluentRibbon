@@ -9,6 +9,7 @@ set(CMAKE_AUTOMOC ON)
 
 if(MSVC)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+	add_compile_options(/MP)
 endif()
 
 option(QFR_BUILD_SHARED "Build qfr_ribbon as a shared library" ON)
