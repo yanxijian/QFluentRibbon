@@ -1,6 +1,7 @@
 ﻿#include "qfluentribbon/qfluentribbon.hpp"
 #include "qte_sync.hpp"
 #include "qtheme/engine.hpp"
+#include "qtheme/settings.hpp"
 #include "qtheme/types.hpp"
 
 #include <QAction>
@@ -13,7 +14,6 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QSettings>
 #include <QStyle>
 #include <QTabBar>
 #include <QVBoxLayout>
@@ -196,12 +196,13 @@ int main(int argc, char** argv)
 						 });
 	}
 
-	QSettings settings;
+	QSettings settings = qtheme::makeAppIniSettings(QStringLiteral("QFluentRibbonGallery"));
 	QObject::connect(qat, &qfluentribbon::QuickAccessBar::actionsChanged, &window,
-					 [qat, status, &settings]()
+					 [qat, status]()
 					 {
-						 qat->saveState(settings);
-						 status->setText(QStringLiteral("QAT updated (%1 pinned) — saved to QSettings").arg(qat->actions().size()));
+						 QSettings s = qtheme::makeAppIniSettings(QStringLiteral("QFluentRibbonGallery"));
+						 qat->saveState(s);
+						 status->setText(QStringLiteral("QAT updated (%1 pinned) — saved to config/*.ini").arg(qat->actions().size()));
 					 });
 
 	const int restored = qat->restoreState(settings, catalog);
