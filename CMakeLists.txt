@@ -10,6 +10,12 @@ set(CMAKE_AUTOMOC ON)
 if(MSVC)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 	add_compile_options(/MP)
+	# Emit PDBs in Release too: WER crash dumps symbolicate against our
+	# binaries when PDBs sit beside them (see e.g. Volition's
+	# scripts/analyze_crash.py). /Zi keeps Release optimization unchanged;
+	# /DEBUG:FULL only adds symbols.
+	add_compile_options("$<$<CONFIG:Release>:/Zi>")
+	add_link_options("$<$<CONFIG:Release>:/DEBUG:FULL>")
 endif()
 
 option(QFR_BUILD_SHARED "Build qfr_ribbon as a shared library" ON)
