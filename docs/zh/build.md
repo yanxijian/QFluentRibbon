@@ -10,6 +10,8 @@
 | QThemeEngine | **仅 Demo**（`QFR_BUILD_EXAMPLES`）需要；库目标 `qfr_ribbon` **不**链接 QTE |
 | 工具链 | CMake 3.21+、Ninja；Windows MSVC x64 |
 
+系统库（`user32`、`dwmapi` 等）只在 `CMakeLists.txt` 里 `target_link_libraries`，不要用 `#pragma comment(lib, …)`。详见 `.cursor/rules/cmake-windows-libs.mdc`。
+
 ## 推荐：本地 prefix
 
 本地共享库惯例使用构建目录 **`build-shared`**。通过 `CMAKE_PREFIX_PATH` 找已安装的 QTE（`qte_engine`）。

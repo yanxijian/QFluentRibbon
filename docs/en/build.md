@@ -10,6 +10,8 @@
 | QThemeEngine | Required only when building the demo (`QFR_BUILD_EXAMPLES`); the `qfr_ribbon` library does **not** link QTE |
 | Toolchain | CMake 3.21+, Ninja; MSVC x64 on Windows |
 
+Link Windows system libraries with `target_link_libraries` in `CMakeLists.txt`, not `#pragma comment(lib, …)`. See `.cursor/rules/cmake-windows-libs.mdc`.
+
 Local shared-library convention uses **`build-shared`**. Point `CMAKE_PREFIX_PATH` at an installed QTE (`qte_engine`).
 
 ```bat
