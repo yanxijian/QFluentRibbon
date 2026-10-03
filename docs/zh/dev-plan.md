@@ -2,7 +2,7 @@
 
 > **English**：[../en/dev-plan.md](../en/dev-plan.md)  
 > **地位**：建仓后的开发方案与里程碑备忘；**产品边界以 [architecture.md](architecture.md) 为准**。  
-> **更新**：2026-07-26（`ribbon.*` Pack SSOT + DPI scaledMetric / ScreenTip 夹紧）
+> **更新**：2026-10-04（对照代码核实后的择机项）
 
 ---
 
@@ -104,6 +104,16 @@ M0–M6 已交付
   → QTE Pack `ribbon.*` 度量 SSOT + QFR scaledMetric / ScreenTip 夹紧
     → 后续：QAT 从命令钉入、KeyTip 层级 Esc、按组级联缩略、Gallery 矢量图标
 ```
+
+## 5.1 择机改进（已对照代码核实，以后再做）
+
+| 项 | 核实 | 拟做 |
+|----|------|------|
+| 缩略回归 | `tests/test_collapse.cpp` 只锁 `chooseUniformSizes` 纯规则，无真实 `RibbonBar` 在宽度矩阵下的 `LayoutRequest` | 加一组固定宽度往复的 Widgets 测，断言无布局循环、档位单调 |
+| 简化模式与 Action 状态 | `setSimplified` → `rebuildButtons()`，按钮 `setDefaultAction`，Check 在 `QAction` 上；无 `QActionGroup`、无切换回归测 | 可勾选组用 `QActionGroup`；单测简化↔经典后 `isChecked` 不丢 |
+
+**不收录**：「完全没有缩略单测」——规则层已有。
+
 ## 6. 明确暂不做
 
 | 项 | 原因 |

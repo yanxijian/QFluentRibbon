@@ -2,7 +2,7 @@
 
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
-> **Updated**: 2026-07-25 (M6 polish / export)
+> **Updated**: 2026-10-04 (deferred items verified against tree)
 
 ## Goal
 
@@ -29,6 +29,16 @@ Qt Widgets Office-like Ribbon framework; **skins driven by QTE**; Fluent.Ribbon 
 ## Red lines
 
 No Ribbon-private QSS; owner-draw reads ThemeStore only; prefer native widgets in groups; layout rules unit-tested where possible; no pre-refactor for a specific host product.
+
+## Deferred (verified, later)
+
+| Item | Fact | Later |
+|------|------|-------|
+| Collapse widget tests | `test_collapse.cpp` covers `chooseUniformSizes` only, not a live `RibbonBar` | Width-matrix widget tests: no `LayoutRequest` loops, monotonic tiers |
+| Simplified vs check state | `rebuildButtons` uses `setDefaultAction`; no `QActionGroup` / round-trip test | `QActionGroup` for exclusive checks; assert `isChecked` after simplified toggle |
+
+Rule-level collapse tests already exist — do not treat that as a gap.
+
 
 ## Related
 
