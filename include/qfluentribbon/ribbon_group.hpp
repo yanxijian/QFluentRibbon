@@ -10,6 +10,7 @@
 #include <qfluentribbon/qfluentribbon_export.hpp>
 
 class QAction;
+class QActionGroup;
 class QPaintEvent;
 class QResizeEvent;
 class QToolButton;
@@ -60,6 +61,14 @@ namespace qfluentribbon
 			return m_launcherAction;
 		}
 
+		/// Put checkable actions into an exclusive QActionGroup (created on demand).
+		/// Survives simplified ↔ classic rebuilds because check state lives on QAction.
+		void setExclusiveActions(const QList<QAction*>& actions);
+		[[nodiscard]] QActionGroup* exclusiveActionGroup() const
+		{
+			return m_exclusiveGroup;
+		}
+
 		[[nodiscard]] layout::GroupWidthHints widthHints() const;
 		[[nodiscard]] QSize sizeHint() const override;
 		[[nodiscard]] QSize minimumSizeHint() const override;
@@ -93,6 +102,7 @@ namespace qfluentribbon
 		QList<QWidget*> m_extraWidgets;
 		QAction* m_launcherAction = nullptr;
 		QToolButton* m_launcherButton = nullptr;
+		QActionGroup* m_exclusiveGroup = nullptr;
 	};
 } // namespace qfluentribbon
 

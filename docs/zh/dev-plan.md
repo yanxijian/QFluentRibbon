@@ -110,7 +110,7 @@ M0–M6 已交付
 | 项 | 核实 | 拟做 |
 |----|------|------|
 | 缩略回归 | `tests/test_collapse.cpp` 只锁 `chooseUniformSizes` 纯规则，无真实 `RibbonBar` 在宽度矩阵下的 `LayoutRequest` | 加一组固定宽度往复的 Widgets 测，断言无布局循环、档位单调 |
-| 简化模式与 Action 状态 | `setSimplified` → `rebuildButtons()`，按钮 `setDefaultAction`，Check 在 `QAction` 上；无 `QActionGroup`、无切换回归测 | 可勾选组用 `QActionGroup`；单测简化↔经典后 `isChecked` 不丢 |
+| 简化模式与 Action 状态 | **已落地（2026-10-04）**：`setExclusiveActions` + `test_ribbon_group_actions`（简化往返保 Check） | 宽度矩阵 Widgets 测仍待做 |
 
 **不收录**：「完全没有缩略单测」——规则层已有。
 

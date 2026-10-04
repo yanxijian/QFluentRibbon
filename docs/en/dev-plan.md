@@ -35,7 +35,7 @@ No Ribbon-private QSS; owner-draw reads ThemeStore only; prefer native widgets i
 | Item | Fact | Later |
 |------|------|-------|
 | Collapse widget tests | `test_collapse.cpp` covers `chooseUniformSizes` only, not a live `RibbonBar` | Width-matrix widget tests: no `LayoutRequest` loops, monotonic tiers |
-| Simplified vs check state | `rebuildButtons` uses `setDefaultAction`; no `QActionGroup` / round-trip test | `QActionGroup` for exclusive checks; assert `isChecked` after simplified toggle |
+| Simplified vs check state | **Done (2026-10-04)**: `setExclusiveActions` + `qfr_group_action_tests` | Width-matrix widget tests still open |
 
 Rule-level collapse tests already exist — do not treat that as a gap.
 

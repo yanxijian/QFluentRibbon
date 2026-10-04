@@ -4,6 +4,7 @@
 #include "qfluentribbon/theme_bridge.hpp"
 
 #include <QAction>
+#include <QActionGroup>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QResizeEvent>
@@ -142,6 +143,33 @@ namespace qfluentribbon
 		ensureLauncherButton();
 		relayoutButtons();
 		update();
+	}
+
+	void RibbonGroup::setExclusiveActions(const QList<QAction*>& actions)
+	{
+		if (!m_exclusiveGroup)
+		{
+			m_exclusiveGroup = new QActionGroup(this);
+			m_exclusiveGroup->setExclusive(true);
+		}
+		const auto previous = m_exclusiveGroup->actions();
+		for (QAction* action : previous)
+		{
+			m_exclusiveGroup->removeAction(action);
+		}
+		for (QAction* action : actions)
+		{
+			if (!action)
+			{
+				continue;
+			}
+			action->setCheckable(true);
+			if (!m_actions.contains(action))
+			{
+				(void)addAction(action);
+			}
+			(void)m_exclusiveGroup->addAction(action);
+		}
 	}
 
 	layout::GroupWidthHints RibbonGroup::widthHints() const

@@ -132,8 +132,12 @@ if(QFR_BUILD_TESTS)
 	target_link_libraries(qfr_qat_tests PRIVATE qfr_ribbon Qt6::Test)
 	add_test(NAME qfr_qat_tests COMMAND qfr_qat_tests)
 
+	add_executable(qfr_group_action_tests tests/test_ribbon_group_actions.cpp)
+	target_link_libraries(qfr_group_action_tests PRIVATE qfr_ribbon Qt6::Test)
+	add_test(NAME qfr_group_action_tests COMMAND qfr_group_action_tests)
+
 	if(WIN32 AND QFR_BUILD_SHARED)
-		foreach(_qfr_test IN ITEMS qfr_tests qfr_qat_tests)
+		foreach(_qfr_test IN ITEMS qfr_tests qfr_qat_tests qfr_group_action_tests)
 			add_custom_command(TARGET ${_qfr_test} POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different
 						$<TARGET_FILE:qfr_ribbon>
