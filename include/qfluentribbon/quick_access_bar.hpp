@@ -26,6 +26,7 @@ namespace qfluentribbon
 		Q_OBJECT
 	public:
 		explicit QuickAccessBar(QWidget* parent = nullptr);
+		~QuickAccessBar() override;
 
 		void setThemeBridge(ThemeBridge* bridge);
 
@@ -64,6 +65,7 @@ namespace qfluentribbon
 	private:
 		void rebuildButtons();
 		void relayoutButtons();
+		void watchAction(QAction* action);
 		[[nodiscard]] int barHeight() const;
 
 		ThemeBridge* m_bridge = nullptr;

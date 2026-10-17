@@ -41,6 +41,21 @@ namespace qfluentribbon
 		setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 	}
 
+	RibbonGroup::~RibbonGroup()
+	{
+		// Child QActions are destroyed from ~QObject, after our members are gone.
+		// Detach their hooks first so no destroyed() lambda touches a half-built
+		// group.
+		for (QAction* action : m_actions)
+		{
+			disconnect(action, nullptr, this, nullptr);
+		}
+		if (m_launcherConn)
+		{
+			disconnect(m_launcherConn);
+		}
+	}
+
 	void RibbonGroup::setTitle(const QString& title)
 	{
 		if (m_title == title)
@@ -79,9 +94,27 @@ namespace qfluentribbon
 		if (!m_actions.contains(action))
 		{
 			m_actions.append(action);
+			connect(action, &QObject::destroyed, this,
+					[this, action]
+					{
+						if (m_actions.removeAll(action) > 0)
+						{
+							rebuildButtons();
+						}
+					});
 			rebuildButtons();
 		}
 		return action;
+	}
+
+	bool RibbonGroup::removeAction(QAction* action)
+	{
+		if (!action || m_actions.removeAll(action) == 0)
+		{
+			return false;
+		}
+		rebuildButtons();
+		return true;
 	}
 
 	QAction* RibbonGroup::addAction(const QString& text)
@@ -139,7 +172,21 @@ namespace qfluentribbon
 		{
 			return;
 		}
+		if (m_launcherConn)
+		{
+			disconnect(m_launcherConn);
+		}
 		m_launcherAction = action;
+		if (action)
+		{
+			m_launcherConn = connect(action, &QObject::destroyed, this,
+									 [this]
+									 {
+										 m_launcherAction = nullptr;
+										 ensureLauncherButton();
+										 relayoutButtons();
+									 });
+		}
 		ensureLauncherButton();
 		relayoutButtons();
 		update();

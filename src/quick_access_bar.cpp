@@ -14,6 +14,8 @@
 #include <QVariant>
 #include <QtGlobal>
 
+#include <utility>
+
 namespace qfluentribbon
 {
 	QuickAccessBar::QuickAccessBar(QWidget* parent)
@@ -22,6 +24,31 @@ namespace qfluentribbon
 		setObjectName(QStringLiteral("qfr.QuickAccessBar"));
 		setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 		setContextMenuPolicy(Qt::DefaultContextMenu);
+	}
+
+	QuickAccessBar::~QuickAccessBar()
+	{
+		for (QAction* action : m_actions)
+		{
+			disconnect(action, nullptr, this, nullptr);
+		}
+	}
+
+	void QuickAccessBar::watchAction(QAction* action)
+	{
+		if (!action)
+		{
+			return;
+		}
+		connect(action, &QObject::destroyed, this,
+				[this, action]
+				{
+					if (m_actions.removeAll(action) > 0)
+					{
+						rebuildButtons();
+						emit actionsChanged();
+					}
+				});
 	}
 
 	void QuickAccessBar::setThemeBridge(ThemeBridge* bridge)
@@ -49,6 +76,7 @@ namespace qfluentribbon
 			return false;
 		}
 		m_actions.append(action);
+		watchAction(action);
 		rebuildButtons();
 		emit actionsChanged();
 		return true;
@@ -96,6 +124,10 @@ namespace qfluentribbon
 			return resolved.size();
 		}
 		m_actions = resolved;
+		for (QAction* action : std::as_const(m_actions))
+		{
+			watchAction(action);
+		}
 		rebuildButtons();
 		emit actionsChanged();
 		return resolved.size();

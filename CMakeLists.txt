@@ -183,7 +183,7 @@ if(QFR_INSTALL)
 	write_basic_package_version_file(
 		"${CMAKE_CURRENT_BINARY_DIR}/QFluentRibbonConfigVersion.cmake"
 		VERSION ${PROJECT_VERSION}
-		COMPATIBILITY SameMajorVersion
+		COMPATIBILITY SameMinorVersion
 	)
 
 	install(FILES

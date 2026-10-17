@@ -11,6 +11,7 @@ private slots:
 	void actionIdPrefersProperty();
 	void resolveIdsSkipsUnknownAndDupes();
 	void roundTripIds();
+	void destroyedActionIsRemoved();
 };
 
 void TestQatState::actionIdPrefersProperty()
@@ -50,6 +51,17 @@ void TestQatState::roundTripIds()
 	QHash<QString, QAction*> catalog{{QStringLiteral("clipboard.paste"), &paste}, {QStringLiteral("font.bold"), &bold}};
 	const auto restored = qfluentribbon::QuickAccessBar::resolveIds(ids, catalog);
 	QCOMPARE(restored, pinned);
+}
+
+void TestQatState::destroyedActionIsRemoved()
+{
+	qfluentribbon::QuickAccessBar bar;
+	auto* action = new QAction(QStringLiteral("Paste"));
+	QVERIFY(bar.addAction(action));
+	QVERIFY(bar.contains(action));
+	delete action;
+	QVERIFY(!bar.contains(action));
+	QCOMPARE(bar.actions().size(), 0);
 }
 
 QTEST_MAIN(TestQatState)

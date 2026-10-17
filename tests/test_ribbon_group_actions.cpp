@@ -10,6 +10,7 @@ class TestRibbonGroupActions : public QObject
 private slots:
 	void checkableSurvivesSimplifiedToggle();
 	void exclusiveGroupSurvivesSimplifiedToggle();
+	void destroyedActionIsDetached();
 };
 
 void TestRibbonGroupActions::checkableSurvivesSimplifiedToggle()
@@ -47,6 +48,15 @@ void TestRibbonGroupActions::exclusiveGroupSurvivesSimplifiedToggle()
 	QCOMPARE(right->isChecked(), true);
 	QCOMPARE(left->isChecked(), false);
 	QCOMPARE(group.exclusiveActionGroup()->checkedAction(), right);
+}
+
+void TestRibbonGroupActions::destroyedActionIsDetached()
+{
+	qfluentribbon::RibbonGroup group(QStringLiteral("Edit"));
+	QAction* action = group.addAction(QStringLiteral("Bold"));
+	QCOMPARE(group.actions().size(), 1);
+	delete action;
+	QCOMPARE(group.actions().size(), 0);
 }
 
 QTEST_MAIN(TestRibbonGroupActions)

@@ -25,6 +25,7 @@ namespace qfluentribbon
 		Q_OBJECT
 	public:
 		explicit RibbonGroup(const QString& title, QWidget* parent = nullptr);
+		~RibbonGroup() override;
 
 		void setTitle(const QString& title);
 		[[nodiscard]] QString title() const
@@ -35,6 +36,8 @@ namespace qfluentribbon
 		void setThemeBridge(ThemeBridge* bridge);
 		[[nodiscard]] QAction* addAction(QAction* action);
 		[[nodiscard]] QAction* addAction(const QString& text);
+		/// Detach without deleting; also invoked automatically when the action dies.
+		bool removeAction(QAction* action);
 		/// Optional custom content (e.g. RibbonGallery) laid out after command buttons.
 		void addWidget(QWidget* widget);
 		[[nodiscard]] QList<QAction*> actions() const
@@ -101,6 +104,7 @@ namespace qfluentribbon
 		QList<QToolButton*> m_buttons;
 		QList<QWidget*> m_extraWidgets;
 		QAction* m_launcherAction = nullptr;
+		QMetaObject::Connection m_launcherConn;
 		QToolButton* m_launcherButton = nullptr;
 		QActionGroup* m_exclusiveGroup = nullptr;
 	};
