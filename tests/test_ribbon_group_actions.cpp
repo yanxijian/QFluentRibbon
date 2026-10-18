@@ -1,4 +1,4 @@
-#include "qfluentribbon/ribbon_group.hpp"
+﻿#include "qfluentribbon/ribbon_group.hpp"
 
 #include <QAction>
 #include <QActionGroup>
