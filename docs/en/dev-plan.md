@@ -1,5 +1,7 @@
 # QFluentRibbon development plan
 
+<!-- translated-from: docs/zh/dev-plan.md sha256:7c9079d46616 -->
+
 > **中文主文档**：[../zh/dev-plan.md](../zh/dev-plan.md)  
 > Canonical text is Chinese; this is a synced summary.  
 > **Updated**: 2026-10-04 (deferred items verified against tree)

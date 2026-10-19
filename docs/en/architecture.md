@@ -1,5 +1,7 @@
 # QFluentRibbon architecture
 
+<!-- translated-from: docs/zh/architecture.md sha256:52db3cf70bee -->
+
 > **中文主文档**：[../zh/architecture.md](../zh/architecture.md)  
 > Canonical text is Chinese; this is a synced summary.  
 > **Updated**: 2026-07-25 (repo bootstrap)

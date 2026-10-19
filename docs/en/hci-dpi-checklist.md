@@ -1,5 +1,7 @@
 # HCI / high-DPI checklist (M6)
 
+<!-- translated-from: docs/zh/hci-dpi-checklist.md sha256:aa2ae95ca0e5 -->
+
 > **中文主文档**：[../zh/hci-dpi-checklist.md](../zh/hci-dpi-checklist.md)
 
 Run `qfr_demo` on Windows at **100% and ≥150%** scale, across Fluent Light / Dark / **High Contrast**.

@@ -208,6 +208,32 @@
       ],
       "switch_line": true,
       "stale": "warning"
+    },
+    "translations": {
+      "pairs": [
+        [
+          "docs/zh/architecture.md",
+          "docs/en/architecture.md"
+        ],
+        [
+          "docs/zh/build.md",
+          "docs/en/build.md"
+        ],
+        [
+          "docs/zh/ci.md",
+          "docs/en/ci.md"
+        ],
+        [
+          "docs/zh/dev-plan.md",
+          "docs/en/dev-plan.md"
+        ],
+        [
+          "docs/zh/hci-dpi-checklist.md",
+          "docs/en/hci-dpi-checklist.md"
+        ]
+      ],
+      "marker": "translated-from:",
+      "stale": "warning"
     }
   },
   "gitattributes": {

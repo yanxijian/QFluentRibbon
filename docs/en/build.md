@@ -1,5 +1,7 @@
 # Build
 
+<!-- translated-from: docs/zh/build.md sha256:d99350e72bea -->
+
 > **中文主文档**：[../zh/build.md](../zh/build.md)
 
 ## Dependencies
