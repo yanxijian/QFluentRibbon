@@ -2,10 +2,14 @@
 
 **日本語** · [English](README.md) · [简体中文](README.zh-CN.md) · [한국어](README.ko.md)
 
-<!-- translated-from: README.md sha256:68257f24838d -->
-
 [![CI](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml/badge.svg)](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Qt](https://img.shields.io/badge/Qt-6.8%2B-green.svg)](https://www.qt.io/)
+[![CI](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml/badge.svg)](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+<!-- translated-from: README.md sha256:9b671e343cf3 -->
+
 
 **Qt Widgets** 向けの Office 風 **リボン**。見た目とスキンは **[QThemeEngine](https://github.com/yanxijian/QThemeEngine)（QTE）が駆動**します。
 操作感と情報設計は [Fluent.Ribbon](https://github.com/fluentribbon/Fluent.Ribbon)（WPF）を参考にしていますが、**移植ではありません**。

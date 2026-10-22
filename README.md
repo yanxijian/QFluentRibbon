@@ -4,6 +4,7 @@
 
 [![CI](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml/badge.svg)](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Qt](https://img.shields.io/badge/Qt-6.8%2B-green.svg)](https://www.qt.io/)
 
 Office-like **Ribbon** for **Qt Widgets**, with **look & skinning driven by [QThemeEngine](https://github.com/yanxijian/QThemeEngine) (QTE)**.  
 Interaction/IA is inspired by [Fluent.Ribbon](https://github.com/fluentribbon/Fluent.Ribbon) (WPF) — **not** a port.

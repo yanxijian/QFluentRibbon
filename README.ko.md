@@ -2,10 +2,14 @@
 
 **한국어** · [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 
-<!-- translated-from: README.md sha256:68257f24838d -->
-
 [![CI](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml/badge.svg)](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Qt](https://img.shields.io/badge/Qt-6.8%2B-green.svg)](https://www.qt.io/)
+[![CI](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml/badge.svg)](https://github.com/yanxijian/QFluentRibbon/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+<!-- translated-from: README.md sha256:9b671e343cf3 -->
+
 
 **Qt Widgets**용 Office 스타일 **리본**. 겉모습과 스킨은 **[QThemeEngine](https://github.com/yanxijian/QThemeEngine)(QTE)이 주도**합니다.
 조작감과 정보 구조는 [Fluent.Ribbon](https://github.com/fluentribbon/Fluent.Ribbon)(WPF)을 참고했지만 **이식은 아닙니다**.
