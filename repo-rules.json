@@ -271,5 +271,16 @@
   "about": {
     "description": "Office-like Ribbon for Qt Widgets, skinned by QThemeEngine | Qt Widgets 的 Office 风格 Ribbon，由 QThemeEngine 换肤",
     "order": "en-zh"
+  },
+  "actions": {
+    "require": {
+      "actions/checkout": "v7",
+      "actions/setup-python": "v7",
+      "actions/setup-node": "v7",
+      "actions/upload-artifact": "v7",
+      "actions/download-artifact": "v8",
+      "actions/cache": "v6"
+    },
+    "allow_sha": true
   }
 }
